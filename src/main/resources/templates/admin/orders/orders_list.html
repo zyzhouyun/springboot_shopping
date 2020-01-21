@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .modal-header {
+            text-align: center;
+        }
+
+        table td {
+            text-align: center;
+            border: 0px;
+        }
+    </style>
+    <title>订单列表</title>
+    <!-- 分页 -->
+    <link th:href="@{../css/mypage.css}" rel="stylesheet">
+    <link th:href="@{../css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{../css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+</head>
+<body>
+<!--<jsp:include page="../main_top.html"></jsp:include>-->
+<!--<jsp:include page="../main_left.jsp"></jsp:include>-->
+<!--=============================================================================================================================================================================-->
+<!--main-container-part-->
+<div id="content" style="margin-right: 100px; margin-top: 40px;">
+    <!--breadcrumbs-->
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="admin/indexs" title="主页" class="tip-bottom">
+                <i class="icon-home"></i>主页</a> <a title="订单列表" class="tip-bottom">订单列表</a>
+        </div>
+    </div>
+    <!--End-breadcrumbs-->
+    <!-- Page table -->
+    <div class="container" style="width: 1100px;">
+        <!-- &lt;!&ndash; Marketing Icons Section &ndash;&gt;-->
+        <div class="col-lg-12">
+            <h2 class="page-header"
+                style="margin-top: 10px; text-align: center; font-family: '微软雅黑', Verdana, sans-serif, '宋体', serif;">
+                订单列表显示</h2>
+        </div>
+        <!--搜索栏-->
+        <form class="form-horizontal" id="myserchform" name="myform" method="post" th:action="@{/order/orderList}">
+            <div class="form-group">
+                <div class="col-sm-8" style="text-align: center; width: 800px">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>订单编号：</span>
+                    <input type="text" placeholder="请输入纯数字~" name="orderNum" value=""/>
+                    &nbsp;&nbsp;<span>买家昵称：</span>
+                    <input type="text" placeholder="请输入买家昵称~" name="orderInformation" value=""/>
+                    &nbsp;&nbsp;<span>订单状态：</span>
+                    <select name="orderState" id="myselected">
+                        <option value="" selected="selected">请选择订单状态</option>
+                        <option value="1">代发货</option>
+                        <option value="2">待收货</option>
+                        <option value="3">已完成</option>
+                    </select>
+                </div>
+                <div class="col-sm-4" style="width: 300px;">
+                    <button class="btn btn-success btn-sm" type="submit" style="margin-left: 150px">查找</button>
+                    <button class="btn btn-danger btn-sm" type="button" id="deleteOrdersButton"
+                            @click.prevent="batchDel()">删除
+                    </button>
+                </div>
+            </div>
+        </form>
+        <!--表格显示-->
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAllButton" @change="chooseAll()"></th>
+                <th style="text-align: center">订单编号</th>
+                <th style="text-align: center">买家昵称</th>
+                <th style="text-align: center">订单价格</th>
+                <th style="text-align: center">创建时间</th>
+                <th style="text-align: center">订单状态</th>
+                <th style="text-align: center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${ not #lists.isEmpty(selectInfo.list)}" th:each="duan:${selectInfo.list}">
+                <td><input type="checkbox" name="choose" th:value="${duan.orderId}" v-model.trim.number="choose"></td>
+                <td th:text="${duan.orderCode}"></td>
+                <td th:text="${duan.userName}"></td>
+                <td th:text="${duan.orderMoney}"></td>
+                <td th:text="${#dates.format(duan.ordertime,'yyyy-MM-dd')}"></td>
+                <td th:text="${duan.orderStatus}"><span style="color: grey"></span></td>
+
+                <!--<td><c:if test="${item.orderState == 1}">-->
+                <!--<span style="color: blue">代发货</span>-->
+                <!--</c:if> <c:if test="${item.orderState == 2}">-->
+                <!--<span style="color: red">待收货</span>-->
+                <!--</c:if> <c:if test="${item.orderState == 3}">-->
+                <!--<td><span style="color: orange">已完成</span></td>-->
+                <!--</c:if></td>-->
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm"
+                            onclick="doView()">查看
+                    </button>
+                    <button type="button" class="btn btn-info btn-sm" th:orderId="${duan.orderId}"
+                            onclick="del(this)">删除
+                    </button>
+            </tr>
+            <!--</c:forEach>-->
+            </tbody>
+        </table>
+        <!--分页条-->
+        <div style="text-align: right">
+            <div class="pagination">
+                <ul>
+                    <li><a>总订单数:${ordersGrid.total }个</a></li>
+                    <li><a>第${ordersGrid.current }页</a></li>
+                    <!--<c:if test="${ordersGrid.current ne 1 }">-->
+                    <li><a href="admin/ordersList?pageNum=${ordersGrid.current-1}">上一页</a>
+                    </li>
+                    <!--</c:if>-->
+                    <!--<c:if test="${ordersGrid.current < (ordersGrid.total+9)/10-1 }">-->
+                    <li><a href="admin/ordersList?pageNum=${ordersGrid.current+1 }">下一页</a>
+                    </li>
+                    <!--</c:if>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==================================================================================================================-->
+<!--<jsp:include page="../main_bottom.jsp"></jsp:include>-->
+<!--修改  模态框（Modal） -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">修改订单信息</h4>
+            </div>
+            <div class="modal-body" style="height: 0 auto;">
+                <form class="form-horizontal" id="myeditform" name="myform">
+                    <input type="hidden" id="id" name="id" value=""/>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">订单编号:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="orderNum" style="margin-top: 8px;"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">买家名称:</label>
+                        <div class="col-sm-8">
+								<textarea rows="3" cols="20" name="orderInformation"
+                                          style="margin-top: 8px; width: 365px">
+								</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">订单价格:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="orderPrice" style="margin-top: 8px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">创建时间:</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="orderDate" class="form-control form_datetime"
+                                   style="margin-top: 8px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">状态:</label>
+                        <div class="col-sm-8">
+                            <select name="orderState"
+                                    style="margin-top: 8px; width: 372px; height: 27px;">
+                                <option value="1" selected="selected">代发货</option>
+                                <option value="2">待收货</option>
+                                <option value="3">已完成</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="doSave()">提交更改</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+<!-- 查看 模态框（Modal） -->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">查看订单信息</h4>
+            </div>
+            <div class="modal-body" style="height: 0 auto;">
+                <form class="form-horizontal" id="myviewform" name="myform">
+                    <input type="hidden" id="id" name="id" value=""/>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">订单编号:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="orderNum"
+                                   readonly style="margin-top: 8px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">订单信息:</label>
+                        <div class="col-sm-8">
+								<textarea rows="3" cols="20" name="orderInformation" readonly
+                                          style="margin-top: 8px; width: 365px">
+								</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">订单价格:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="orderPrice" readonly
+                                   style="margin-top: 8px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">创建时间:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="orderDate" readonly style="margin-top: 8px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">状态:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="orderState" readonly
+                                   style="margin-top: 8px;"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+</body>
+<script type="text/javascript" th:src="@{../js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{../js/bootstrap.min.js}"></script>
+<!-- datetimepicker -->
+<script type="text/javascript" th:src="@{../js/bootstrap-datetimepicker.min.js}"></script>
+<script type="text/javascript" th:src="@{../js/bootstrap-datetimepicker.zh-CN.js}"></script>
+<script type="text/javascript" th:src="@{../js/vue.js}"></script>
+<script type="text/javascript" th:src="@{../js/vue-resource-min.js}"></script>
+<script th:src="@{../layer/2.4/layer.js}"></script>
+<!-- 全选 base.js -->
+<!--<script type="text/javascript" src="js/custom/base.js"></script>-->
+<script type="text/javascript">
+    //初始化时间
+    $(".form_datetime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        todayHighlight: true,
+        language: 'zh-CN',
+        autoclose: true
+    });
+
+    // 查看
+    $(".btn-primary").click(function () {
+        $('#viewModal').modal('toggle');
+    });
+
+    /* 保存 */
+    function doSave() {
+        $.ajax({
+            url: 'admin/updateOrders',
+            type: 'POST',
+            data: $('#myeditform').serialize(),// 序列化表单值
+            dataType: 'json',
+            success: function (json) {
+                alert(json.msg);
+                $('#editModal').modal('toggle');
+                location.reload();
+            },
+            error: function () {
+                alert('请求超时或系统出错!');
+                $('#editModal').modal('toggle');
+            }
+        });
+    }
+
+    //根据值 动态选中
+    $("#myselected option[value='${searchorders.orderState}']").attr("selected", "selected");
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    Vue.http.options.emulateJSON = true
+    var vm = new Vue({
+        el: "#content",
+        data: {
+            selectInfo: [[${selectInfo}]],
+            choose: [],
+        },
+        methods: {
+            chooseAll: function () {
+                if (event.currentTarget.checked) {
+                    console.log(event.currentTarget)
+                    this.choose = [];
+                    //全选被选中
+                    var list = this.selectInfo.list;
+                    //console.log(list)
+                    var that = this;
+                    list.forEach(function (item, index) {
+                        that.choose.push(item.orderId);
+                    })
+
+                } else {
+                    //未选中
+                    this.choose = []
+                }
+            },
+            batchDel: function () {
+                var chooses = this.choose
+                if (chooses.length == 0) {
+                    layer.msg("请选择删除项");
+                    return false;
+                }
+                layer.confirm('确认要删除吗？', function () {
+                    $.ajax({
+                        url: '/order/batchDelete',
+                        data: {
+                            "orderIds": chooses
+                        },
+                        type: "post",
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.num > 0) {
+                                layer.msg('删除成功', {icon: 1})
+                                $("input[name='choose']:checked").parents('tr').remove();
+                                //location.href=location.href
+                            } else {
+                                layer.alert("删除失败", {icon: 2})
+                            }
+                        },
+                        error: function () {
+                            layer.msg('服务器繁忙')
+                        }
+                    })
+                })
+            }
+        }
+    })
+
+    function del(obj) {
+        layer.confirm('确认删除吗', function () {
+            var orderId = $(obj).attr('orderid')
+            vm.$http.post('/order/delete', {
+                "orderId": orderId
+            }).then(function (res) {
+                console.log(res.body)
+                if (res.body == 1) {
+                    layer.msg('删除成功', {icon: 1})
+                    $(obj).parents('tr').remove();
+                } else {
+                    layer.msg('删除失败', {icon: 2})
+                }
+            })
+        })
+    }
+</script>
+</html>

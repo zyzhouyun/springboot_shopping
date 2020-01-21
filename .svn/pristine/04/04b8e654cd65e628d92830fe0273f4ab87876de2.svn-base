@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.rocket.dream.shopping.pojo.Order">
+    <id column="orderId" jdbcType="INTEGER" property="orderId" />
+    <result column="userCode" jdbcType="INTEGER" property="userCode" />
+    <result column="orderCode" jdbcType="DECIMAL" property="orderCode" />
+    <result column="orderMoney" jdbcType="REAL" property="orderMoney" />
+    <result column="orderStatus" jdbcType="DECIMAL" property="orderStatus" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    orderId, userCode, orderCode, orderMoney, orderStatus
+  </sql>
+  <select id="selectByExample" parameterType="com.rocket.dream.shopping.pojo.OrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sh_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sh_order
+    where orderId = #{orderId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sh_order
+    where orderId = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rocket.dream.shopping.pojo.OrderExample">
+    delete from sh_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rocket.dream.shopping.pojo.Order">
+    insert into sh_order (orderId, userCode, orderCode, 
+      orderMoney, orderStatus)
+    values (#{orderId,jdbcType=INTEGER}, #{userCode,jdbcType=INTEGER}, #{orderCode,jdbcType=DECIMAL}, 
+      #{orderMoney,jdbcType=REAL}, #{orderStatus,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rocket.dream.shopping.pojo.Order">
+    insert into sh_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        orderId,
+      </if>
+      <if test="userCode != null">
+        userCode,
+      </if>
+      <if test="orderCode != null">
+        orderCode,
+      </if>
+      <if test="orderMoney != null">
+        orderMoney,
+      </if>
+      <if test="orderStatus != null">
+        orderStatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=DECIMAL},
+      </if>
+      <if test="orderMoney != null">
+        #{orderMoney,jdbcType=REAL},
+      </if>
+      <if test="orderStatus != null">
+        #{orderStatus,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rocket.dream.shopping.pojo.OrderExample" resultType="java.lang.Long">
+    select count(*) from sh_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sh_order
+    <set>
+      <if test="record.orderId != null">
+        orderId = #{record.orderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userCode != null">
+        userCode = #{record.userCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderCode != null">
+        orderCode = #{record.orderCode,jdbcType=DECIMAL},
+      </if>
+      <if test="record.orderMoney != null">
+        orderMoney = #{record.orderMoney,jdbcType=REAL},
+      </if>
+      <if test="record.orderStatus != null">
+        orderStatus = #{record.orderStatus,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sh_order
+    set orderId = #{record.orderId,jdbcType=INTEGER},
+      userCode = #{record.userCode,jdbcType=INTEGER},
+      orderCode = #{record.orderCode,jdbcType=DECIMAL},
+      orderMoney = #{record.orderMoney,jdbcType=REAL},
+      orderStatus = #{record.orderStatus,jdbcType=DECIMAL}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rocket.dream.shopping.pojo.Order">
+    update sh_order
+    <set>
+      <if test="userCode != null">
+        userCode = #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="orderCode != null">
+        orderCode = #{orderCode,jdbcType=DECIMAL},
+      </if>
+      <if test="orderMoney != null">
+        orderMoney = #{orderMoney,jdbcType=REAL},
+      </if>
+      <if test="orderStatus != null">
+        orderStatus = #{orderStatus,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where orderId = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rocket.dream.shopping.pojo.Order">
+    update sh_order
+    set userCode = #{userCode,jdbcType=INTEGER},
+      orderCode = #{orderCode,jdbcType=DECIMAL},
+      orderMoney = #{orderMoney,jdbcType=REAL},
+      orderStatus = #{orderStatus,jdbcType=DECIMAL}
+    where orderId = #{orderId,jdbcType=INTEGER}
+  </update>
+</mapper>

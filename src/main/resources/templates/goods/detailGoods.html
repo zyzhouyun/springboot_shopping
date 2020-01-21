@@ -1,0 +1,623 @@
+<!--
+评论
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>鲁大二手工坊</title>
+    <link rel="stylesheet" href="/css/index.css" />
+    <script type="text/javascript" src="/js/jquery.js" ></script>
+    <script type="text/javascript" src="/js/materialize.min.js" ></script>
+    <script type="text/javascript" src="/js/index.bundle.js" ></script>
+    <link rel="stylesheet" href="/css/materialize-icon.css" />
+    <link rel="stylesheet" href="/css/detail.css" />
+
+    <script src="/js/jquery.cookie.js"></script>
+    <script src="/layer/2.4/layer.js"></script>
+    <script src="/js/vue.js"></script>
+    <script src="/js/vue-resource-min.js"></script>
+
+    <script>
+       function showLogin() {
+            if($("#signup-show").css("display")=='block'){
+                $("#signup-show").css("display","none");
+            }
+            if($("#login-show").css("display")=='none'){
+                $("#login-show").css("display","block");
+            }else{
+                $("#login-show").css("display","none");
+            }
+        }
+        function showSignup() {
+            if($("#login-show").css("display")=='block'){
+                $("#login-show").css("display","none");
+            }
+            if($("#signup-show").css("display")=='none'){
+                $("#signup-show").css("display","block");
+            }else{
+                $("#signup-show").css("display","none");
+            }
+        }
+        function ChangeName() {
+            if($("#changeName").css("display")=='none'){
+                $("#changeName").css("display","block");
+            }else{
+                $("#changeName").css("display","none");
+            }
+        }
+    </script>
+    
+    <script type="text/javascript">
+    
+    function  addFocus(id) {
+    	location.href = 'user/addFocus/'+id
+    	alert("已关注成功，查看关注列表~")
+    	
+    }
+    
+	/* 前往支付 */
+    function  toPay(id) {
+    	window.location.href = 'goods/buyId/'+id
+    }
+	
+    </script>
+    
+    
+<body ng-view="ng-view">
+<!--
+
+    描述：顶部
+-->
+<div ng-controller="headerController" class="header stark-components navbar-fixed ng-scope">
+    <nav class="white nav1">
+        <div class="nav-wrapper">
+            <a href="goods/homeGoods" class="logo">
+                <em class="em1">鲁大</em>
+                <em class="em2">二手工坊</em>
+                <em class="em3">ldu.market</em>
+            </a>
+            <div class="nav-wrapper search-bar">
+                <form ng-submit="search()" class="ng-pristine ng-invalid ng-invalid-required" action="goods/search">
+                    <div class="input-field">
+                        <input id="search" name="str" placeholder="搜点什么吧..." style="height: 40px;"
+                               class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required"/>
+                        <input type="submit" class="btn"value="搜索"></input>
+                        <label for="search" class="active">
+                            <i ng-click="search()" class="iconfont"></i>
+                        </label>
+                         
+                    </div>
+                   
+                </form>
+            </div>
+            <ul class="right">
+
+                    <li class="publish-btn">
+                        <button onclick="showLogin()" data-toggle="tooltip" 
+                                title="您需要先登录哦！" class="red lighten-1 waves-effect waves-light btn" 	>
+                            我要发布</button>
+                          
+                    </li>
+
+
+                    <li class="publish-btn">
+                        <button data-position="bottom" class="red lighten-1 waves-effect waves-light btn">
+                            <a href="goods/publishGoods">我要发布</a>
+                        </button>
+                    </li>
+                    <li>
+                        <a href="user/allGoods">我发布的商品</a>
+                    </li>
+                    <li>
+                        <a>${cur_user.username}</a>
+                    </li>
+                   <!--  <li class="notification">
+                        <i ng-click="showNotificationBox()" class="iconfont"></i>
+                        <div ng-show="notification.tagIsShow" class="notification-amount red lighten-1 ng-binding ng-hide">0 </div>
+                    </li> -->
+                    <li class="changemore">
+                        <a class="changeMoreVertShow()">
+                            <i class="iconfont"></i>
+                        </a>
+                        <div class="more-vert">
+                            <ul class="dropdown-content">
+                                <li><a href="user/home">个人中心</a></li>
+                                 <li><a href="user/allFocus">我的关注</a></li>
+                                <li><a onclick="ChangeName()">更改用户名</a></li>
+                                <li><a href="user/logout">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+
+                    <li>
+                        <a onclick="showLogin()">登录</a>
+                    </li>
+                    <li>
+                        <a onclick="showSignup()">注册</a>
+                    </li>
+
+            </ul>
+        </div>
+    </nav>
+</div>
+<!--
+
+    描述：登录
+-->
+<div ng-controller="loginController" class="ng-scope">
+    <div id="login-show" class="login stark-components">
+        <div class="publish-box z-depth-4">
+            <div class="row">
+                <a onclick="showLogin()">
+                    <div class="col s12 title"></div>
+                </a>
+                <form action="user/login" method="post" commandName="user" role="form">
+                    <div class="input-field col s12">
+                        <input type="text" name="phone" required="required" pattern="^1[0-9]{10}$" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <label>手机</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="password" name="password" required="required" class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" />
+                        <label>密码</label>
+                        <!-- <a ng-click="showForget()" class="forget-btn">忘记密码？</a> -->
+                    </div>
+                    <button type="submit" class="waves-effect waves-light btn login-btn red lighten-1">
+                        <i class="iconfont left"></i>
+                        <em>登录</em>
+                    </button>
+                    <div class="col s12 signup-area">
+                        <em>没有账号？赶快</em>
+                        <a onclick="showSignup()" class="signup-btn">注册</a>
+                        <em>吧！</em>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+
+    描述：注册
+-->
+<div ng-controller="signupController" class="ng-scope">
+    <div id="signup-show" class="signup stark-components">
+        <div class="publish-box z-depth-4">
+            <div class="row">
+                <a onclick="showSignup()">
+                    <div class="col s12 title"></div>
+                </a>
+                <form action="../../user/addUser" method="post" commandName="user" role="form">
+                    <div class="input-field col s12">
+                        <input type="text" name="username" required="required" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <label>昵称</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="text" name="phone" required="required" pattern="^1[0-9]{10}$" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <label>手机</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="password" name="password" required="required" class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" />
+                        <label>密码</label>
+                    </div>
+                    <div ng-show="checkTelIsShow" class="col s12">
+                        <button type="submit" class="waves-effect waves-light btn verify-btn red lighten-1">
+                            <i class="iconfont left"></i>
+                            <em>点击注册</em>
+                        </button>
+                    </div>
+                    <div ng-show="checkTelIsShow" class="login-area col s12">
+                        <em>已有账号？去</em>
+                        <a onclick="showLogin()">登录</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--更改用户名-->
+<div ng-controller="changeNameController" class="ng-scope">
+    <div id="changeName" class="change-name stark-components">
+        <div class="publish-box z-depth-4">
+            <div class="row">
+                <div class="col s12 title">
+                    <h1>修改用户名</h1>
+                </div>
+                <form action="../../user/changeName" method="post" commandName="user" role="form">
+                    <div class="input-field col s12">
+                        <input type="text" name="username" required="required" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <label>修改用户名</label>
+                    </div>
+                    <div ng-show="checkTelIsShow" class="col s12">
+                        <button class="waves-effect waves-light btn publish-btn red lighten-1">
+                            <i class="iconfont left"></i>
+                            <em>确认</em>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--显示商品详情-->
+<div ng-controller="detailBoxController" class="detail-box stark-components z-depth-1 row ng-scope">
+    <!--不要删除，可以占页面显示的位置-->
+    <div class="col s12 path">
+        <a href="goods/catelog/${catelog.id}"></a>
+        <em></em>
+        <a></a>
+    </div>
+
+
+    <div class="col s6">
+        <div class="slider wrap">
+            <ul class="slides" style="height: 400px;">
+                <!--商品图片-->
+                <img class="billImg" style="width: 400px;height: 400px;"
+                     th:each="img : ${billCustom.imgList}" th:src="${img}" />
+            </ul>
+            <!--点-->
+            <ul class="indicators">
+                <li class="indicator-item point" th:each="img,stat : ${billCustom.imgList}" th:text="${stat.count}" style="color: #fff;font-size: 14px;"></li>
+            </ul>
+        </div>
+    </div>
+
+    <style type="text/css">
+        .wrap{
+            width: 400px;
+            height: 400px;
+            overflow: hidden;
+
+            position: relative;
+        }
+        .slides{
+            width: 3000px;
+            position: relative;
+        }
+        .currentPoint{
+            background-color: #5a79ba!important;
+        }
+        .point{
+            position: absolute;
+            bottom: 5px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $(".point").eq(0).addClass('currentPoint')
+            var imgW=$(".billImg").eq(0).width()
+            var point=$(".point")
+            var curIndex=0;
+            point.click(function () {
+                $(this).addClass('currentPoint').siblings().removeClass('currentPoint');
+                curIndex=$(this).index();
+                $(".slides").animate({
+                    "left":-imgW*curIndex
+                })
+            })
+            var timer=setInterval(dater,3000);
+            function dater(){
+                curIndex++;
+                if(curIndex>point.length-1){
+                    curIndex=0;
+                }
+                point.eq(curIndex).trigger("click");
+            }
+            $(".wrap").hover(function(){
+                clearInterval(timer);
+            },function(){
+                timer=setInterval(dater,2000);
+            })
+        })
+    </script>
+
+    <div class="col s6">
+        <font style="font-size: 16px;opacity: 0.5;">商品名:</font>
+        <h1 class="item-name" th:text="${billCustom.billName}" style="display: inline-block;color: #698aab;"></h1><p></p>
+        <font style="font-size: 16px;opacity: 0.5;">金额: </font>
+        <h2 class="item-price" th:text="${billCustom.billMoney}+' ¥'" style="display: inline-block;color: #698aab;"></h2><p></p>
+        <font style="font-size: 16px;opacity: 0.5;">上架日期: </font>
+        <h2 class="publisher-info-title" style="display: inline-block;color: #698aab;"><span  th:text="${#dates.format(billCustom.putawayDate,'yyyy-MM-dd')}"></span></h2>
+        <!---->
+        <div class="publisher-info-title" style="margin-top: 20px;margin-bottom: 10px;">
+            <em>卖家信息</em><hr>
+        </div>
+
+        <!--    <div class="item-contact">
+                <p class="not-login">
+                    <a onclick="showLogin()">登录</a>
+                    <em>或</em>
+                    <a onclick="showSignup()">注册</a>
+                    <em>后查看联系信息</em>
+                </p>
+            </div>-->
+
+        <!--卖家信息-->
+            <div class="item-contact">
+                <div>
+                        <img style="width: 40px;height: 40px;border-radius: 20px;float: left;" title="头像"
+                             th:src="${ ! #strings.isEmpty(billCustom.user.userHeadPortrait)}?${billCustom.user.userHeadPortrait}">
+                        <span class="value" style="color: #5a79ba;display: inline-block;" th:text="${billCustom.user.userName}"></span>
+                </div>
+                <div>
+                    <div class="base-blue z-depth-1 attr">
+                        <i class="iconfont"></i>
+                    </div>
+                    <div class="value" style="color: #5a79ba;"
+                         th:text="${ ! #strings.isEmpty(billCustom.user.userPhone)}?${billCustom.user.userPhone}:'暂未提供'"></div>
+                </div>
+
+                <div style="margin-top: 48px;">
+               <input type="button" value="加入购物车" class="blue lighten-1 waves-effect waves-light btn" style="background: #a25768;"
+                      id="btn_cart" th:billId="${billCustom.billCode}" th:userCode="${billCustom.userCode}" onclick="addCart(this)"></input>
+
+               <!--<input type="button" value="在线支付" data-toggle="tooltip"  title="不可以购买自己的东西哦~" disabled="disabled" class="blue lighten-1 waves-effect waves-light btn" id="btn_buy"></input>
+-->
+               <input type="button" value="在线支付"  class="blue lighten-1 waves-effect waves-light btn"  th:billId="${billCustom.billCode}" th:userCode="${billCustom.userCode}" id="onlinePay" onclick="onlinePay(this)"></input>
+                </div>
+                
+            </div>
+    </div>
+</div>
+<div class="detail-box stark-components z-depth-1 row">
+    <h1 class="title">商品描述</h1>
+    <hr class="hr1" />
+    <hr class="hr2" />
+    <p class="section" th:text="${billCustom.billdesc}"></p>
+    <p class="section"></p>
+</div>
+<script th:inline="javascript" type="text/javascript">
+    function addCart(obj) {
+        if([[${session.loginUser}]]==null){
+            layer.msg('还没有登录噢')
+            return false
+        }
+        var login=[[${session.loginUser}]]
+        if(login!=null){
+            if($(obj).attr('userCode')==login.userCode){
+                layer.msg('不能购买自己的东西噢')
+                return false
+            }
+        }
+            $.ajax({
+                url:'/billc/addBillCodetoCart',
+                data:{
+                    "billCode":$(obj).attr('billId')
+                },
+                type:'post',
+                dataType:'json',
+                async:true,
+                success:function (res) {
+                    if(res==1){
+                        layer.msg('成功加入购物车',{icon:1})
+                        $(obj).prop('disabled',true)
+                    }else if(res==-1){
+                        layer.msg('此商品已加入购物车')
+                    }else{
+                        layer.msg('出错了',{icon:2})
+                    }
+                },
+                error:function () {
+                    alert('服务器繁忙')
+                }
+            })
+        }
+    function onlinePay(obj) {
+        if([[${session.loginUser}]]==null){
+            layer.msg('还没有登录噢')
+            return false
+        }
+        var login=[[${session.loginUser}]]
+        if(login!=null){
+            if($(obj).attr('userCode')==login.userCode){
+                layer.msg('不能购买自己的东西噢')
+                return false
+            }
+        }
+            var $billCode=parseInt($(obj).attr('billId'))
+            var choose=[$billCode]
+            location.href='/billc/toPay/'+choose
+    }
+</script>
+
+
+
+
+<!--评论-->
+<div class="row detail-area" id="app">
+    <div class="clo s12">
+        <div ng-controller="commentController" class="comment stark-components z-depth-1 ng-scope">
+            <h1 class="title">评论</h1>
+            <hr class="hr1" />
+            <hr class="hr2" />
+
+          <form id="addCommentForm" class="form-horizontal" >
+            <div class="comment-add row">
+                <div class="input-field col s12">
+                    <input id="goodsId" name="goods.id" value="${goodsExtend.goods.id}" type="hidden"/>
+                    <input type="text" id="commentbox"  name="content" v-model.trim="comment.commentInfo" class="" />
+                    <label for="commentbox">说点什么吧...</label>
+                 <!--   <c:if test="${!empty cur_user}">-->
+                    <button type="button" @click="publish" class="waves-effect wave-light btn comment-submit" >发布</button>
+
+              <!--     <%&#45;&#45;   <c:if test="${!empty cur_user} && ${cur_user.id!=goodsExtend.comments.userId}">-->
+                    <button @click.prevent.stop="comment.commentInfo=''" class="waves-effect wave-light btn comment-submit">取消</button>
+
+
+              <!--       <c:if test="${!empty cur_user} && ${cur_user.id==goodsExtend.comments.userId}">-->
+                 <!--   <button data-toggle="tooltip"  title="您已经评论过了哦！" disabled="disabled"  class="waves-effect wave-light btn comment-submit">确认</button>
+
+                    &lt;!&ndash; <c:if test="${empty cur_user}">&ndash;&gt;
+                    <button href="javacript:void(0);" data-toggle="tooltip"  title="您需要先登录哦！" disabled="disabled" class="waves-effect wave-light btn comment-submit">确认</button>-->
+
+
+                </div>
+            </div>
+            </form>
+            <div id="context" style="width:600px;margin-top: 100px;margin-left: 200px;">
+                    <ul style="list-style: none;">
+                        <span v-if="pageInfo.size==0">暂无评论</span>
+                        <li class="sayItem" v-else v-for="(comt,index) in pageInfo.list" :comId="comt.comId">
+                            <img :src="comt.user.userHeadPortrait" style="width: 30px;height: 30px;border-radius: 15px;border: none;margin-right: 5px;">
+                            <span class="userCode" v-text="comt.user.userName"></span>
+                            <p class="content" v-text="comt.commentInfo"></p>
+                            <span class="comDate">{{comt.comDate | dateFormat(comt.comDate)}}</span>
+                        </li>
+                    </ul>
+
+                <center id="centerPage" style="height: 60px;margin-top: 30px;line-height: 60px;text-align: center;">
+                    <span v-show="pageInfo.pages>1"><font style="color: #999;">当前第</font>&nbsp;<span v-text="pageInfo.pageNum"></span>&nbsp;/&nbsp;<span v-text="pageInfo.pages"></span>&nbsp;<font style="color: #999;margin-right: 20px;">页</font></span>
+                    <a href="javascript:void(0)" v-show="pageInfo.hasPreviousPage" @click.prevent="firstPage" style="margin-right: 13px;color:#00b0ff;">首页</a>
+                    <a href="javascript:void(0)"  v-show="pageInfo.pages>1" @click.prevent="prePage"  style="margin-right: 13px;color:#00b0ff;">上一页</a>
+                    <a href="javascript:void(0)"  v-show="pageInfo.pages>1" @click.prevent="nextPage" style="margin-right: 13px;color:#00b0ff;">下一页</a>
+                    <a href="javascript:void(0)" v-show="pageInfo.hasNextPage" @click.prevent="pages"  style="margin-right: 30px;color:#00b0ff;">尾页</a>
+                    <input type="text" ref="num" class="pageNum" v-show="pageInfo.pages>1" v-model.trim="pageNum" @keyup.enter="ref" style="width: 30px;text-align: center;margin-right: 5px;" maxlength="3" >
+                    <button class="refnum" v-show="pageInfo.pages>1" @click.prevent="ref" style="width: 60px;height: 30px;border: none;background-color: #0bb9f8;color: #fff;">跳转</button>
+                </center>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #context .sayItem{
+        width: 100%;
+        border-bottom: 1px solid #ccc;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        min-height: 130px;
+        background-color: #fbfaf5;
+        box-sizing: border-box;
+        padding-bottom: 16px;
+    }
+    .sayItem .userCode{
+        margin-bottom: 10px;display: inline-block;
+    }
+    #centerPage a:hover{
+        color:#84a2d4!important;
+    }
+    .sayItem .content{
+        text-indent: 2em;font-size: 14px;color: #84b9cb;height: 80px;
+    }
+    .sayItem .comDate{
+        display: block;float: right;height:20px;color: #999;
+    }
+</style>
+<script type="text/javascript" th:inline="javascript">
+    Vue.http.options.emulateJSON = true
+    Vue.filter('dateFormat',function(time){
+        var date=new Date(time);
+        var year=date.getFullYear();
+        var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+        var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+        var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+        var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+        var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+        return year+"-"+month+"-"+day
+    })
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            pageInfo:{},
+            billCustom:[[${billCustom}]],
+            comment:{
+                userCode:1,
+                commentInfo:'',
+            },
+            pageNum:'',
+        },
+        methods:{
+            findComments:function () {
+                this.$http.post('/buy/findPageComments',{
+                    "billCode":this.billCustom.billCode
+                }).then(function (result) {
+                    this.pageInfo=result.body
+                })
+            },
+            publish:function () {
+                if(this.comment.commentInfo.length==0){
+                    return false
+                }else{
+                    this.$http.post('/buy/createComment',{
+                        "userCode":this.comment.userCode,
+                        "commentInfo":this.comment.commentInfo,
+                        "billCode":this.billCustom.billCode
+                    }).then(function (result) {
+                        console.log(result.body);
+                        if(result.body==1){
+                            layer.msg('发布成功',{icon:1})
+                            this.comment.commentInfo='' //清空文本框
+                            this.findComments()
+                        }else{
+                            layer.msg('发布失败',{icon:2})
+                        }
+                    })
+                }
+            },
+            firstPage:function () {
+                this.$http.post('/buy/findPageComments',
+                    {"billCode":this.billCustom.billCode,"pageNum":this.pageInfo.firstPage}).then(function (result) {
+                    this.pageInfo=result.body
+                })
+            },
+            prePage:function () {
+                if(this.pageInfo.pageNum===this.pageInfo.firstPage){
+                    layer.msg('当前是第一页')
+                    return false;
+                }
+                this.$http.post('/buy/findPageComments',
+                    {"billCode":this.billCustom.billCode,"pageNum":this.pageInfo.prePage}).then(function (result) {
+                    this.pageInfo=result.body
+                })
+            },
+            nextPage:function () {
+                if(this.pageInfo.isLastPage){
+                    layer.msg('当前是尾页')
+                    return false;
+                }
+                this.$http.post('/buy/findPageComments',
+                    {"billCode":this.billCustom.billCode,"pageNum":this.pageInfo.nextPage}).then(function (result) {
+                    this.pageInfo=result.body
+                })
+            },
+            pages:function () {
+                this.$http.post('/buy/findPageComments',
+                    {"billCode":this.billCustom.billCode,"pageNum":this.pageInfo.pages}).then(function (result) {
+                    this.pageInfo=result.body
+                })
+            },
+            ref:function () {
+                var reg=/^[1-9][0-9]{0,2}$/
+                if(!reg.test(this.pageNum)){
+                    this.pageNum=''
+                    layer.msg('请输入1-3位正整数')
+                    this.$refs.num.focus()
+                    return false
+                }else if(this.pageNum>this.pageInfo.pages){
+                    this.pageNum=''
+                    layer.msg('抱歉！找不到此页')
+                    this.$refs.num.focus()
+                    return false
+                }
+                    this.$http.post('/buy/findPageComments',
+                        {"billCode":this.billCustom.billCode,"pageNum":this.pageNum}).then(function (result) {
+                        this.pageInfo=result.body
+                        this.pageNum=''
+                        this.$refs.num.focus()
+                    })
+            }
+        },
+        created:function () {
+            this.findComments()
+    }
+    })
+</script>
+</body>
+
+</html>

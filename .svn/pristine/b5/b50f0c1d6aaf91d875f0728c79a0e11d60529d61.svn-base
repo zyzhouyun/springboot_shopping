@@ -1,0 +1,53 @@
+package com.rocket.dream.shopping.pojo;
+
+public class Address {
+    private Integer addressId;
+
+    private Integer userCode;
+
+    private String addressName;
+
+    private Long addressPhone;
+
+    private String addressInfo;
+
+    public Integer getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
+    }
+
+    public Integer getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Integer userCode) {
+        this.userCode = userCode;
+    }
+
+    public String getAddressName() {
+        return addressName;
+    }
+
+    public void setAddressName(String addressName) {
+        this.addressName = addressName;
+    }
+
+    public Long getAddressPhone() {
+        return addressPhone;
+    }
+
+    public void setAddressPhone(Long addressPhone) {
+        this.addressPhone = addressPhone;
+    }
+
+    public String getAddressInfo() {
+        return addressInfo;
+    }
+
+    public void setAddressInfo(String addressInfo) {
+        this.addressInfo = addressInfo;
+    }
+}

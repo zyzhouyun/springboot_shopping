@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" xmlns:th="http://www.thymeleaf.org">
+    <title>校园二手商品</title>
+    <link rel="icon" href="../img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/index.css"/>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <script type="text/javascript" src="../js/index.bundle.js"></script>
+    <link rel="stylesheet" href="../css/materialize-icon.css"/>
+    <link rel="stylesheet" href="css/user.css"/>
+
+</head>
+<body ng-view="ng-view">
+<!--
+    描述：顶部
+-->
+<div ng-controller="headerController" class="header stark-components navbar-fixed ng-scope">
+    <nav class="white nav1">
+        <div class="nav-wrapper">
+            <a href="goods/homeGoods" class="logo">
+                <!--                <em class="em1">鲁大</em>-->
+                <em class="em2">校园二手商品</em>
+                <!--                <em class="em3">ldu.market</em>-->
+            </a>
+            <div class="nav-wrapper search-bar">
+                <form class="ng-pristine ng-invalid ng-invalid-required" action="goods/search">
+                    <div class="input-field">
+                        <input id="search" name="str" placeholder="搜点什么吧..." style="height: 40px;"
+                               class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required"/>
+                        <input type="submit" class="btn" value="搜索"></input>
+                        <label for="search" class="active">
+                            <i ng-click="search()" class="iconfont"></i>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <ul class="right">
+                <li th:if="${session.loginUser!=null}">
+                    <!--购物车按钮-->
+                    <a th:href="@{/billc/showCartList}" class="red lighten-1 waves-effect waves-light btn"
+                       title="您需要先登录哦！" style="display: inline-block;color: #fff;margin-bottom: 6px">我的购物车</a>
+                </li>
+                <span th:if="${session.loginUser == null || session.loginUser == ''}">
+                    <li class="publish-btn">
+                        <button onclick="showLogin()" data-toggle="tooltip" th:if="${session.loginUser!=null}"
+                                title="您需要先登录哦！" class="red lighten-1 waves-effect waves-light btn">
+                            我要发布
+                        </button>
+                    </li>
+                </span>
+                <span th:if="${session.loginUser != null && session.loginUser != ''}">
+
+                    <li class="publish-btn" ><!--th:if="${session.loginUser!=null}"-->
+                        <button data-position="bottom" class="red lighten-1 waves-effect waves-light btn">
+                            <a th:href="@{/goods/publishGoods}">我要发布</a>
+                        </button>
+                    </li>
+
+                    <li>
+                        <a th:text="${session.loginUser.userName}"></a>
+                    </li>
+                    <!-- <li class="notification">
+                        <i ng-click="showNotificationBox()" class="iconfont"></i>
+                    </li> -->
+                    <li class="changemore">
+                        <a class="changeMoreVertShow()">
+                            <i class="iconfont"></i>
+                        </a>
+                        <div class="more-vert">
+                            <ul class="dropdown-content">
+                                <li><a th:href="@{/oneSelf/showHome}">个人中心</a></li>
+                                <li><a href="user/allFocus">我的关注</a></li>
+                                <!--<li><a onclick="ChangeName()">更改用户名</a></li>-->
+                                <li><a th:href="@{/user/loginOut}">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </span>
+                <span th:if="${session.loginUser == null || session.loginUser == ''}">
+                    <li>
+                        <a onclick="showLogin()">登录</a>
+                    </li>
+                    <li>
+                        <a onclick="showSignup()">注册</a>
+                    </li>
+                </span>
+
+            </ul>
+        </div>
+    </nav>
+</div>
+<!--
+    描述：登录
+-->
+<div ng-controller="loginController" class="ng-scope">
+    <div id="login-show" class="login stark-components">
+        <div class="publish-box z-depth-4">
+            <div class="row">
+                <a onclick="showLogin()">
+                    <div class="col s12 title"></div>
+                </a>
+                <form th:action="@{/user/login}" method="get" role="form" id="denglu">
+                    <div class="input-field col s12">
+                        <input type="text" name="userPhone" id="login_phone"
+                               class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched"/>
+                        <label>手机&nbsp;&nbsp;<div id="login_errorPhone" style="color:red;display:inline;"></div>
+                        </label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="password" id="login_password" name="userPwd"
+                               class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required"/>
+                        <label>密码&nbsp;&nbsp;<div id="errorPassword" style="color:red;display:inline;"></div>
+                        </label>
+                        <!--   <a ng-click="showForget()" class="forget-btn">忘记密码？</a> -->
+                    </div>
+                    <button type="button" id="loginIn" class="waves-effect waves-light btn login-btn red lighten-1">
+                        <i class="iconfont left"></i>
+                        <em>登录</em>
+                    </button>
+                    <div class="col s12 signup-area">
+                        <em>没有账号？赶快</em>
+                        <a onclick="showPhoneCaptcha()" class="signup-btn">注册</a>
+                        <em>吧！</em>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+
+    描述：注册
+-->
+<div ng-controller="signupController" class="ng-scope">
+    <div id="signup-show" class="signup stark-components">
+        <div class="publish-box z-depth-4">
+            <div class="row">
+                <a onclick="showSignup()">
+                    <div class="col s12 title"></div>
+                </a>
+                <form action="user/addUser" method="POST" role="form" id="signup_form">
+                    <div class="input-field col s12">
+                        <input type="text" name="username" required="required"
+                               class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched"/>
+                        <label>昵称</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="text" name="phone" id="phone" required="required" pattern="^1[0-9]{10}$"
+                               class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched"/>
+                        <label>手机&nbsp;&nbsp;<div id="errorPhone" style="color:red;display:inline;"></div>
+                        </label>
+
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="password" name="password" required="required"
+                               class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required"/>
+                        <label>密码</label>
+                    </div>
+                    <div ng-show="checkTelIsShow" class="col s12">
+                        <button type="submit" id="register"
+                                class="waves-effect waves-light btn verify-btn red lighten-1">
+                            <i class="iconfont left"></i>
+                            <em>点击注册</em>
+                        </button>
+                    </div>
+                    <div ng-show="checkTelIsShow" class="login-area col s12">
+                        <em>已有账号？去</em>
+                        <a onclick="showLogin()">登录</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+
+    描述：手机验证注册
+-->
+<div ng-controller="signupController" class="ng-scope">
+    <div id="phoneCaptcha-show" class="signup stark-components" style="display: none">
+        <div class="publish-box z-depth-4">
+            <div class="row">
+                <a onclick="showPhoneCaptcha()">
+                    <div class="col s12 title"></div>
+                </a>
+                <form action="user/addUser" method="POST" role="form" id="captcha_form">
+                    <div class="input-field col s12">
+                        <input type="text" name="phone" id="captchar_phone"
+                               class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched"/>
+                        <label>手机&nbsp;&nbsp;<div id="errorPhoneCaptcha" style="color:red;display:inline;"></div>
+                        </label>
+
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="text" name="phoneCaptcha" id="phoneCaptcha"
+                               class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched"/>
+                        <label>手机验证码&nbsp;&nbsp;<div id="errorCaptchar" style="color:red;display:inline;"></div>
+                        </label>
+                    </div>
+                    <div ng-show="checkTelIsShow" class="col s12">
+                        <button type="button" id="captcha"
+                                class="waves-effect waves-light btn verify-btn red lighten-1">
+                            <i class="iconfont left"></i>
+                            <em>点击验证</em>
+                        </button>
+                    </div>
+                    <div ng-show="checkTelIsShow" class="login-area col s12">
+                        <em>已有账号？去</em>
+                        <a onclick="showLogin()">登录</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--更改用户名-->
+<!--<div ng-controller="changeNameController" class="ng-scope">
+    <div id="changeName" class="change-name stark-components">
+        <div class="publish-box z-depth-4">
+            <div class="row">
+                <div class="col s12 title">
+                    <h1>修改用户名</h1>
+                </div>
+                <form action="user/changeName" method="post" role="form">
+                    <div class="input-field col s12">
+                        <input type="text" name="username" required="required"
+                               class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched"/>
+                        <label>修改用户名</label>
+
+                    </div>
+                    <div ng-show="checkTelIsShow" class="col s12">
+                        <button class="waves-effect waves-light btn publish-btn red lighten-1">
+                            <i class="iconfont left"></i>
+                            <em>确认</em>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<!--
+    描述：左侧导航条
+-->
+<div ng-controller="sidebarController" class="sidebar stark-components ng-scope">
+    <li ng-class="{true: 'active'}[isAll]">
+        <a href="goods/catelog" class="index">
+            <img src="/img/index.png">
+            <em>最新发布</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isDigital]">
+        <a href="goods/catelog/1" class="digital">
+            <img src="img/digital.png"/>
+            <em>闲置数码</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isCommodity]">
+        <a href="goods/catelog/3" class="commodity">
+            <img src="img/commodity.png"/>
+            <em>闲置电器</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isBook]">
+        <a href="goods/catelog/4" class="book">
+            <img src="img/book.png"/>
+            <em>闲置书籍</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isSport]">
+        <a href="goods/catelog/6" class="sport">
+            <img src="img/sport.png"/>
+            <em>闲置运动</em>
+        </a>
+    </li>
+    <div class="info">
+        <a href="" target="_blank">关于我们</a><em>-</em>
+        <a href="">联系我们</a>
+        <p>©2018 校园二手商品</p>
+    </div>
+</div>
+<!--
+
+    描述：右侧显示部分
+-->
+<div class="main-content">
+    <!--
+
+        描述：右侧banner（图片）部分
+    -->
+    <div class="slider-wapper">
+        <div class="slider"
+             style="height: 440px; touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+            <ul class="slides" style="height: 400px;">
+                <li class="active" style="opacity: 1;">
+                    <a href="goods/homeGoods">
+                        <div class="bannerimg">
+                            <ul class="bannerul">
+                                <p class="text1">Hello：</p>
+                                <p class="text2">欢迎来到鲁东大学secondHandMarket校园二手工坊。临近毕业季的</p>
+                                <p class="text3">你，是否有太多的闲置与校友分享，为了追求更好的校园服</p>
+                                <p class="text4">务，我们打造了一个全新的校园平台——<span>鲁大二手工坊</p>
+                                <p class="text5">这里有更多的闲置分享，更自由的校园话题讨论，你想要的，都在这里。</p>
+                                <p class="text6">加入LDU-SecondHandMarket，你的大学，应更精彩。</p>
+                            </ul>
+                            <!--<div class="logoimg">
+                               <img src="../img/p_logo.jpg" />
+                           </div>-->
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--
+
+        描述：最新发布
+    -->
+    <div class="index-title">
+        <a href="">最新发布</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="bill :${billlist}">
+                <a th:href="@{/billc/descByBillId/}+${bill.billCode}"> <!--rest-->
+                    <div class="card-image">
+                        <img th:src="${#strings.arraySplit(bill.billImage,';')[0]}"/>
+                    </div>
+                    <div class="card-content item-price" th:text="${bill.billMoney}"></div>
+                    <div class="card-content item-name">
+                        <p th:text="${bill.billName}"></p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p>xxx学校</p>
+                        <p th:text="${#dates.format(bill.putawayDate,'yyyy-MM-dd')}"></p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!--
+
+        描述：闲置数码
+    -->
+    <div class="index-title">
+        <a href="">闲置数码</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="bill :${billsDigital}">
+                <a th:href="@{/billc/descByBillId/}+${bill.billCode}">
+                    <div class="card-image">
+                        <img th:src="${#strings.arraySplit(bill.billImage,';')[0]}"/>
+                    </div>
+                    <div class="card-content item-price" th:text="${bill.billMoney}"></div>
+                    <div class="card-content item-name">
+                        <p th:text="${bill.billName}"></p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p>xxx学校</p>
+                        <p th:text="${#dates.format(bill.putawayDate,'yyyy-MM-dd')}"></p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!--    &lt;!&ndash;-->
+
+    <!--        描述：校园代步-->
+    <!--    &ndash;&gt;-->
+    <!--    <div class="index-title">-->
+    <!--        <a href="">校园代步</a>-->
+    <!--        <hr class="hr1">-->
+    <!--        <hr class="hr2">-->
+    <!--    </div>-->
+    <!--    <div class="waterfoo stark-components row">-->
+    <!--        <div class="item-wrapper normal">-->
+    <!--            <div class="card col">-->
+    <!--                <a href="goods/goodsId/${item.goods.id}">-->
+    <!--                    <div class="card-image">-->
+    <!--                        <img src="upload/${item.images[0].imgUrl}"/>-->
+    <!--                    </div>-->
+    <!--                    <div class="card-content item-price"></div>-->
+    <!--                    <div class="card-content item-name">-->
+    <!--                        <p></p>-->
+    <!--                    </div>-->
+    <!--                    <div class="card-content item-location">-->
+    <!--                        <p>鲁东大学</p>-->
+    <!--                        <p></p>-->
+    <!--                    </div>-->
+    <!--                </a>-->
+    <!--            </div>-->
+
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <!--
+
+        描述：闲置电器
+   -->
+    <div class="index-title">
+        <a href="">闲置电器</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="bill :${billsElectrical}">
+                <a th:href="@{/billc/descByBillId/}+${bill.billCode}">
+                    <div class="card-image">
+                        <img th:src="${#strings.arraySplit(bill.billImage,';')[0]}"/>
+                    </div>
+                    <div class="card-content item-price" th:text="${bill.billMoney}"></div>
+                    <div class="card-content item-name">
+                        <p th:text="${bill.billName}"></p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p>xxx学校</p>
+                        <p th:text="${#dates.format(bill.putawayDate,'yyyy-MM-dd')}"></p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!--
+
+        描述：闲置书籍
+    -->
+    <div class="index-title">
+        <a href="">闲置书籍</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="bill :${billsBooks}">
+                <a th:href="@{/billc/descByBillId/}+${bill.billCode}">
+                    <div class="card-image">
+                        <img th:src="${#strings.arraySplit(bill.billImage,';')[0]}"/>
+                    </div>
+                    <div class="card-content item-price" th:text="${bill.billMoney}"></div>
+                    <div class="card-content item-name">
+                        <p th:text="${bill.billName}"></p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p>xxx学校</p>
+                        <p th:text="${#dates.format(bill.putawayDate,'yyyy-MM-dd')}"></p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!--    <div class="index-title">-->
+    <!--        <a href="">美妆衣物</a>-->
+    <!--        <hr class="hr1">-->
+    <!--        <hr class="hr2">-->
+    <!--    </div>-->
+    <!--    <div class="waterfoo stark-components row">-->
+    <!--        <div class="item-wrapper normal">-->
+    <!--            <div class="card col">-->
+    <!--                <a href="goods/goodsId/${item.goods.id}">-->
+    <!--                    <div class="card-image">-->
+    <!--                        <img src="upload/${item.images[0].imgUrl}"/>-->
+    <!--                    </div>-->
+    <!--                    <div class="card-content item-price"></div>-->
+    <!--                    <div class="card-content item-name">-->
+    <!--                        <p></p>-->
+    <!--                    </div>-->
+    <!--                    <div class="card-content item-location">-->
+    <!--                        <p>鲁东大学</p>-->
+    <!--                        <p></p>-->
+    <!--                    </div>-->
+    <!--                </a>-->
+    <!--            </div>-->
+
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <!--
+
+        描述：闲置运动
+    -->
+    <div class="index-title">
+        <a href="">闲置运动</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+
+            <div class="card col" th:each="bill :${billsMotion}">
+                <a th:href="@{/billc/descByBillId/}+${bill.billCode}">
+                    <div class="card-image">
+                        <img th:src="${#strings.arraySplit(bill.billImage,';')[0]}"/>
+                    </div>
+                    <div class="card-content item-price" th:text="${bill.billMoney}"></div>
+                    <div class="card-content item-name">
+                        <p th:text="${bill.billName}"></p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p>xxx大学</p>
+                        <p th:text="${#dates.format(bill.putawayDate,'yyyy-MM-dd')}"></p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!--    <div class="index-title">-->
+    <!--        <a href="">票券小物</a>-->
+    <!--        <hr class="hr1">-->
+    <!--        <hr class="hr2">-->
+    <!--    </div>-->
+    <!--    <div class="waterfoo stark-components row">-->
+    <!--        <div class="item-wrapper normal">-->
+    <!--            &lt;!&ndash; <c:forEach var="item" items="${catelogGoods7}">//&ndash;&gt;-->
+    <!--            <div class="card col">-->
+    <!--                <a href="goods/goodsId/${item.goods.id}">-->
+    <!--                    <div class="card-image">-->
+    <!--                        <img src="upload/${item.images[0].imgUrl}"/>-->
+    <!--                    </div>-->
+    <!--                    <div class="card-content item-price"></div>-->
+    <!--                    <div class="card-content item-name">-->
+    <!--                        <p></p>-->
+    <!--                    </div>-->
+    <!--                    <div class="card-content item-location">-->
+    <!--                        <p>鲁东大学</p>-->
+    <!--                        <p></p>-->
+    <!--                    </div>-->
+    <!--                </a>-->
+    <!--            </div>-->
+
+    <!--        </div>-->
+    <!--    </div>-->
+</div>
+
+
+<script>
+    function showLogin() {
+        if ($("#signup-show").css("display") == 'block') {
+            $("#signup-show").css("display", "none");
+        }
+        if ($("#phoneCaptcha-show").css("display") == 'block') {
+            $("#phoneCaptcha-show").css("display","none");
+        }
+        if ($("#login-show").css("display") == 'none') {
+            $("#login-show").css("display", "block");
+        } else {
+            $("#login-show").css("display", "none");
+        }
+    }
+
+    function showSignup() {
+        if ($("#login-show").css("display") == 'block') {
+            $("#login-show").css("display", "none");
+        }
+        if ($("#phoneCaptcha-show").css("display") == 'block') {
+            $("#phoneCaptcha-show").css("display","none");
+        }
+        if ($("#signup-show").css("display") == 'none') {
+            $("#signup-show").css("display", "block");
+        } else {
+            $("#signup-show").css("display", "none");
+        }
+    }
+
+    function ChangeName() {
+        if ($("#changeName").css("display") == 'none') {
+            $("#changeName").css("display", "block");
+        } else {
+            $("#changeName").css("display", "none");
+        }
+    }
+
+    //显示手机验证页面
+    function showPhoneCaptcha() {
+        if ($("#login-show").css("display") == 'block') {
+            $("#login-show").css("display", "none");
+        }
+        if ($("#signup-show").css("display") == 'block') {
+            $("#signup-show").css("display", "none");
+        }
+        if ($("#phoneCaptcha-show").css("display") == 'none') {
+            $("#phoneCaptcha-show").css("display","block");
+        } else {
+            $("#phoneCaptcha-show").css("display", "none");
+        }
+    }
+
+    //清空登录框中输入的信息
+    function clearLogin() {
+        $("#login_errorPhone").text("");
+        $("#errorPassword").text("");
+    }
+
+
+    $(document).ready(function () {
+       /* //隐藏手机验证码页面
+        $("#phoneCaptcha-show").css("display", "none");*/
+
+        /*//异步验证
+        $("#phone").blur(function () {
+            var phone = $(this).val();
+            $.ajax({
+                url: 'user/register',
+                type: 'POST',
+                data: {phone: phone},
+                dataType: 'json',
+                success: function (json) {
+                    if (json.flag) {
+                        $("#errorPhone").html("账号已被注册，请重新输入!");
+                        $("#register").attr("disabled", true);
+                    } else {
+                        $("#errorPhone").empty();
+                        $("#register").attr("disabled", false);
+                    }
+                },
+                error: function () {
+                    alert('请求超时或系统出错!');
+                }
+            });
+
+        });*/
+
+        /* <%--    $("#login_password").blur(function(){
+                var phone=$("#login_phone").val();
+                var password=$(this).val();
+                $.ajax({
+                      url:'user/password',
+                      type:'POST',
+                      data:{phone:phone,password:password},
+                      dataType:'json',
+                      success:function(json){
+                      if(json){
+                          if(json.flag){
+                               $("#errorPassword").html("请核对账号密码，再重新输入!");
+                               $("#loginIn").attr("disabled",true);
+                          }else{
+                               $("#errorPassword").empty();
+                               $("#loginIn").attr("disabled",false);
+                          }
+                      }else{
+                          if(json.flag){
+                             $("#errorPassword").html("请输入的密码有误!");
+                             $("#loginIn").attr("disabled",true);
+                        }if(json.flag==false){
+                             $("#login_errorPhone").html("您输入的在账号有误!");
+                             $("#loginIn").attr("disabled",true);
+                        }
+                      }
+                      },
+                      error:function(json){
+                         alert("系统出错啦")
+                      }
+                  });
+
+              }); --%>*/
+
+        //zyc:登录验证，当鼠标点击登录按钮时进行登录验证
+        $("#loginIn").click(function () {
+            var phone = $("#login_phone").val();//获取手机号文本框中的value值
+            var pwd = $("#login_password").val();//获取密码框中的value值
+
+            /*var login_phone = $("#login_phone");//获取手机框元素
+            var login_pwd = $("#login_password");//获取密码框元素*/
+            //多次验证时，要先清空上次验证留下的信息
+            clearLogin();
+            //登录相关验证
+            if (null == phone || phone == "") {
+                $("#login_errorPhone").text("手机号不能为空！");
+                return;
+            } else if (isNaN(phone)) {
+                $("#login_errorPhone").text("请输入数字！");
+                return;
+            } else if (phone.length != 11) {
+                $("#login_errorPhone").text("请输入11位手机号！");
+                return;
+            } else if (null == pwd || "" == pwd) {
+                $("#errorPassword").text("密码不能为空！");
+                return;
+            }
+
+            $.ajax({
+                url: "/user/dengluyanzheng",
+                type: "post",
+                data: {userPhone: phone, userPwd: pwd},
+                dataType: "json",
+                success: function (data) {
+                    alert(data);
+                    if (data == -1) {
+                        $("#errorPassword").text("账号或密码错误！");
+                        alert(data);
+                        return;
+                    } else if (data == 1) {
+                        $("#errorPassword").text("账号被冻结，不能登录！");
+                        alert(data);
+                        return;
+                    } else if (data == 0) {
+                        alert(data);
+                        $("#denglu").submit();
+                    }
+                    // alert("dd");
+                }, error: function () {
+                    alert("错误啦！");
+                }
+            })
+        });
+
+        //zyc:手机注册验验证
+        $("#captcha").click(function () {
+            var phone = $("#captchar_phone").val();//获取手机号文本框中的value值
+            var captcha = $("#phoneCaptcha").val();//获取输入的验证码
+
+            /*//做一些必要的判断
+            if (null == phone || phone == "") {
+                $("#captchar_phone").text("手机号不能为空！");
+                return;
+            } else if (isNaN(phone)) {
+                $("#captchar_phone").text("请输入数字！");
+                return;
+            } else if (phone.length != 11) {
+                $("#captchar_phone").text("请输入11位手机号！");
+                return;
+            }else if(captcha == null || captcha == ""){
+                $("#errorCap")
+            }*/
+        });
+
+        /*//当鼠标进入密码框中时，清空文字提示
+        $("#login_password").focus(function () {
+            $("#errorPassword").text("");
+            $("#loginIn").attr("disabled", false);
+        });*/
+
+        /*$("#loginIn").click(function () {
+            alert("点击登录按钮");
+            $("#loginIn").attr("disabled",false);
+        });*/
+
+    });
+
+
+</script>
+</body>
+</html>

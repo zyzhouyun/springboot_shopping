@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<!--
+    负责人：周云
+    我发布的物品页面
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head >
+    <meta charset="UTF-8">
+    <title>我发布的物品</title>
+
+    <link rel="icon" href="../img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/emoji.css" />
+    <link rel="stylesheet" href="../css/userhome.css" />
+    <link rel="stylesheet" href="../css/user.css" />
+    <link rel="icon" href="../img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/emoji.css" />
+    <link rel="stylesheet" href="../css/userhome.css" />
+    <link rel="stylesheet" href="../css/user.css" />
+    <link rel="stylesheet" href="../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/emoji.css" />
+    <link rel="stylesheet" href="../css/userhome.css" />
+    <link rel="stylesheet" href="../css/user.css" />
+     <!-- bootstrap -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script src="../layer/2.4/layer.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-resource-min.js"></script>
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif" class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <div id="home_header">
+            <a href="goods/homeGoods">
+                <h1 class="logo"></h1>
+            </a>
+            <a href="goods/homeGoods">
+                 <img src="../img/home_header.png"  style="margin-left: 20px;" >
+            </a>
+            <!--返回首页-->
+            <a th:href="@{/index}">
+                <div class="home"></div>
+            </a>
+        </div>
+        <!--
+
+            描述：左侧个人中心栏
+        -->
+        <div id="user_nav">
+            <div class="user_info">
+                <div class="head_img">
+                    <img src="../img/photo.jpg">
+                </div>
+                <div class="big_headimg">
+                    <img src="">
+                </div>
+                <span class="name">${cur_user.username}</span><hr>
+              <!--   <span class="school">鲁东大学</span> -->
+                  <a class="btn" style="width: 98%;background-color: rgb(79, 190, 246);color:rgba(255, 255, 255, 1);" href="user/myPurse">我的钱包：￥${myPurse.balance}</a>
+                <input type="hidden" value="${myPurse.recharge}" id="recharge"/>
+                <input type="hidden" value="${myPurse.withdrawals}" id="withdrawals"/>
+               <span class="btn" data-toggle="modal" data-target="#myModal" style="width: 98%;background-color: rgb(79, 190, 246); color:rgba(255, 255, 255, 1);margin-top:0.5cm;">我的信用积分：${cur_user.power}</span>
+                
+            </div>
+            <div class="home_nav">
+                <ul>
+                    <a href="/buy/todetail">
+                        <li class="notice">
+                            <div></div>
+                            <span>发表评论</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a href="user/allFocus">
+                        <li class="fri">
+                            <div></div>
+                            <span>关注列表</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a href="goods/publishGoods">
+                        <li class="store">
+                            <div></div>
+                            <span>发布物品</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a href="user/allGoods">
+                        <li class="second">
+                            <div></div>
+                            <span>我的闲置</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a href="user/basic">
+                        <li class="set">
+                            <div></div>
+                            <span>个人设置</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+
+        <!--
+            描述：右侧内容区域
+        -->
+
+        <div id="user_content" class="userContext">
+            <div class="share">
+                <!--
+                    描述：闲置商品展示
+                -->
+                <h1 style="text-align: center">我发布的物品</h1>
+					<hr />
+                <p style="float: right;">
+                    物品数：
+                    <span style="color: #0bb9f8;" id="billNum" th:text="${publishBillList.size()}"></span>
+                </p>
+                <div class="share_content">
+                     <!--如果物品图片为空-->
+                        <div class="no_share" th:if="${publishBillList.size()==0}">
+                            <span>没有任何内容，去逛逛其它的吧！</span>
+                        </div>
+
+                    <!--如果物品图片不为空；遍历物品;去掉了类样式，添加了行内样式-->
+
+                    <div th:if="${publishBillList.size()!=0}">
+                            <div class="warp" th:each="bill : ${publishBillList}">
+                                <a href="goods/goodsId/${items.goods.id}" class="head_img">
+                                    <img th:src="${#strings.arraySplit(bill.billImage,';')[0]}" style="width: 60px;height: 60px;border-radius: 30px;">
+                                </a>
+                                <span class="name" th:text="${bill.billName}" style="color: #0bb9f8;"></span>
+                                <span class="text" style="overflow: hidden; outline: none;color: #999;" th:text="${bill.billdesc}"></span>
+                                <div class="box" >
+                                    <div class="box_content">
+                                        <div class="left_shadow"></div>
+                                        <div class="left" index="1" style="display: none;"><</div>
+                                        <div class="right_shadow"></div>
+                                        <div class="left" index="3" style="display: none;">></div>
+                                        <img th:src="${#strings.arraySplit(bill.billImage,';')[0]}" index="2" style="width: 500px;height: 300px;margin-left: 100px;"> <!--图片 bill.billImage-->
+                                        <span class="com" style="display: none;left: 396.733px;"></span>
+                                    </div>
+                                    <div class="interact" style="margin-left: 100px;">
+                                        <font style="float: right;margin-right: 100px;">上架时间：<span class="time" th:text="${#dates.format(bill.issueDate,'yyyy-MM-dd')}" style="color: #0bb9f8;"></span></font>
+                                        <span class="fa fa-trash fa-lg"><a href="javascript:void(0)" th:bId="${bill.billCode}" onclick="del(this)">删除</a></span>
+                                    </div><br>
+                                    <div class="like_detail">
+                                        <div class="like_content">
+                                            <span>下架时间：
+                                                <font th:if="${bill.downDate!='' || bill.downDate!='null'}" th:text="${#dates.format(bill.downDate,'yyyy-MM-dd')}"></font>
+                                                <font th:else th:text="暂无" style="color: #ccc;"></font>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+
+
+                </div>
+
+    </div>
+</div>
+
+<style type="text/css">
+
+    .warp{
+        width: 700px;
+        height: 500px;
+        background-color: #fff;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        float: right;
+        position: relative;
+    }
+    #user_content .warp:nth-of-type(n+3) .warp{
+        margin-right: 0px;
+    }
+
+    .share_content{
+        width: 100%;
+        height: 100%;
+    }
+
+    #cover{
+        position: relative;
+    }
+    .box{
+
+    }
+    #user_content{
+        box-sizing: border-box;
+        padding-right: 90px;
+    }
+</style>
+
+<script>
+
+
+    function del(obj) {
+        layer.confirm('<p style="text-align: center;">确定删除吗?</p>',{title:'温馨の提示'},function () {
+        var billCode=$(obj).attr('bId')
+        $.ajax({
+            url:'/publish/deleteBill',
+            data:{billCode:billCode},
+            type:'post',
+            dataType:'json',
+            async:true,
+            success:function (result) {
+                console.log(result);
+                if(result.num==1){
+                    layer.msg('删除成功',{icon:1})
+                    $(obj).parents('.warp').remove()
+                    $("#billNum").text(result.datas)
+                }else{
+                    layer.msg('删除失败',{icon:2})
+                }
+            }
+        })
+        })
+    }
+
+
+
+
+</script>
+
+
+</body>
+</html>

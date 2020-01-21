@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="icon" href="../img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="../css/emoji.css"/>
+    <link rel="stylesheet" href="../css/userhome.css"/>
+    <link rel="stylesheet" href="../css/user.css"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+    <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <style>
+        button {
+            background-color: #0bb9f8;
+            color: white;
+
+        }
+    </style>
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif"
+         class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <div id="home_header">
+            <a href="goods/homeGoods">
+                <h1 class="logo"></h1>
+            </a>
+            <a href="goods/homeGoods">
+                <img src="../img/home_header.png" style="margin-left: 20px;">
+            </a>
+            <a href="user/home">
+                <div class="home"></div>
+            </a>
+        </div>
+        <!--
+
+            描述：左侧个人中心栏
+        -->
+        <div id="user_nav">
+            <div class="user_info">
+                <div class="head_img">
+                    <img th:src="${session.loginUser.userHeadPortrait}">
+                </div>
+                <div class="big_headimg">
+                    <img src="">
+                </div>
+                <span class="name" th:text="${session.loginUser.userName}">${cur_user.username}</span>
+                <hr>
+                <!--   <span class="school">莆田学院</span> -->
+                <a class="btn" style="width: 98%;background-color: rgb(79, 190, 246);color:rgba(255, 255, 255, 1);"
+                   href="user/myPurse">我的钱包：￥${myPurse.balance}</a>
+                <input type="hidden" value="${myPurse.recharge}" id="recharge"/>
+                <input type="hidden" value="${myPurse.withdrawals}" id="withdrawals"/>
+                <span class="btn" data-toggle="modal" data-target="#myModal"
+                      style="width: 98%;background-color: rgb(79, 190, 246); color:rgba(255, 255, 255, 1);margin-top:0.5cm;">
+                	我的信用积分：${cur_user.power}
+                </span>
+
+            </div>
+            <div class="home_nav">
+                <ul>
+                    <a th:href="@{/oneSelf/showOneOrder}">
+                        <li class="notice">
+                            <div></div>
+                            <span>订单中心</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showAddress}">
+                        <li class="fri">
+                            <div></div>
+                            <span>收货地址</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOnePay}">
+                        <li class="store">
+                            <div></div>
+                            <span>充值中心</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showHome}">
+                        <li class="second">
+                            <div></div>
+                            <span>求购信息</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOneSelf}">
+                        <li class="set">
+                            <div></div>
+                            <span>个人设置</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+        <!--
+
+            描述：右侧内容区域
+        -->
+        <div id="user_content">
+
+            <div class="share">
+
+                <div class="publish">
+                    <h1 style="text-align: center;">求购信息</h1>
+                    <form role="form" id="contextForm">
+                        <div class="pub_content">
+                            <div class="text_pub lead emoji-picker-container">
+                                <input type="text" name="context" data-emojiable="converted" class="form-control"
+                                       data-type="original-input" style="display: none;"/>
+                                <div class="emoji-wysiwyg-editor form-control" data-type="input" id="mycontext"
+                                     contenteditable="true">
+                                </div>
+                                <i class="emoji-picker-icon emoji-picker face" data-type="picker"
+                                   style="top: 153px;"></i>
+                                <div class="tag"></div>
+                            </div>
+                            <div class="img_pub">
+                                <ul></ul>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="button">
+
+                        <span class="fa fa-image">
+                            <input type="file" accept="image/gif,image/jpeg,image/jpg,image/png" multiple/>
+                        </span>
+                        <div class="checkbox">
+                            <button id="issue">发 布</button>
+                        </div>
+                    </div>
+
+                </div>
+                <!--
+
+                    描述：
+                -->
+                <div class="share_content">
+                    <div class="yes_share">
+                        <div class="fabu" th:each="buy: ${buyInfo.list}">
+                            <span th:text="${buy.user.userCode}" style="display: none;"></span>
+                            <button class="btn-info"
+                                    style="background-color: #c6f5f4;border:0px;outline:none;width: 40px;height: 40px">
+
+                                <img th:if="${buy.user.userHeadPortrait != null }"
+                                     th:src="${buy.user.userHeadPortrait}" style="width: 40px;height: 40px">
+                            </button>
+                            <br/>
+                            <span th:text="${buy.user.userName}+'说'"></span><br/>
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span th:text="${buy.buyInfo}"></span><br/>
+                            <p style="text-align:right;color:#4fbef6;"
+                               th:text="'发布时间'+${#dates.format(buy.buyDate,'yyyy-MM-dd')}">发布时间：${item.createAt}</p>
+                        </div>
+                        <span id="maxNum" style="display: none" th:text="${pages}"></span>
+                        &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;第 <span
+                            id="curve" th:text="${number}"></span>页
+                        <button id="first">首页</button>
+                        <button id="sed">上一页</button>
+                        <button id="tridy">下一页</button>
+                        <button id="finally">尾页</button>
+                        <textarea rows="1" cols="4" style="position: relative ;top: 15px" id="page"></textarea>
+                        <button id="cha">跳转</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- 模态框（Modal） -->
+<div style="position: relative;bottom: 800px;z-index: 6px;background-color: transparent; height: 1000px;display: none"
+     id="showInfo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title middle" id="myModalLabel">查看用户信息</h4>
+            </div>
+            <div class="modal-body" style="height: 220px;">
+                <form id="myviewform">
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-2">名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="username" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-2">手机号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="phone" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-2">性别:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="sex" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-2">开户时间:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="createAt" readonly/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="close" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script>
+    $(function () {
+
+        $("#issue").click(function () {
+            //发布内容
+            var myInfo = $("#mycontext").text();
+            var fabu = $(".fabu");
+            $.ajax({
+                url: "/oneSelf/insert",
+                data: {"buyInfo": myInfo},
+                dataType: "json",
+                type: "post",
+                success: function (data) {
+                    var time = gettime(data.datas.buyDate);
+                    if (data.num == 1) {
+                        var info = "<div class=\"fabu\">\n" +
+                            "                            <a href=\"#\" class=\"btn btn-info\"\n" +
+                            "                               style=\"background-color: #c6f5f4;border:0px;outline:none;\">\n" +
+                            "\n" +
+                            "                                <img src=" + data.datas.user.userHeadPortrait + " style=\"width: 40px;height: 40px\"/>\n" +
+                            "                            </a><br/>\n" +
+                            "                            <span>" + data.datas.user.userName + "</span><br/>\n" +
+                            "                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span >" + data.datas.buyInfo + "</span><br/>\n" +
+                            "                            <p style=\"text-align:right;color:#4fbef6;\"\n" +
+                            "           >"+ time + "</p>\n" +
+                            "                        </div>"
+                        fabu.before(info)
+                    } else {
+                        alert(data.message)
+                    }
+                }
+            })
+
+        })
+        //首页跳转
+        $("#first").click(function () {
+            window.location.href = "/oneSelf/showHome?number=" + 1;
+        })
+        //上一页跳转
+        $("#sed").click(function () {
+            var num = $("#curve").html();
+            var number = parseInt(num);
+            if (number == 1) {
+                alert("已经首页了");
+            } else {
+                var newVar = --number;
+                window.location.href = "/oneSelf/showHome?number=" + newVar
+            }
+        })
+        //下一页跳转
+        $("#tridy").click(function () {
+            var num = $("#curve").html();
+            var number = parseInt(num);
+            var max = $("#maxNum").html();
+            var number1 = parseInt(max);
+            if (number == number1) {
+                alert("已经是最后一页了");
+            } else {
+                var newVar = ++number;
+                window.location.href = "/oneSelf/showHome?number=" + newVar
+            }
+        })
+        //尾页跳转
+        $("#finally").click(function () {
+            var max = $("#maxNum").html();
+            window.location.href = "/oneSelf/showHome?number=" + max
+        })
+        //点击跳转
+        $("#cha").click(function () {
+            var number = $("#page").val();
+            var max = $("#maxNum").html();
+            if (!isNaN(number)) {
+                if (number > max || number < 1) {
+                    alert("没有此页");
+                } else {
+                    window.location.href = "/oneSelf/showHome?number=" + number;
+                }
+            } else {
+                alert("请输入数字")
+            }
+        })
+        //查看用户模拟框
+        $(".btn-info").click(function () {
+            var userCode = $(this).prev().text();
+            var $username = $("#username");
+            var $phone = $("#phone");
+            var $sex = $("#sex");
+            var $createAt = $("#createAt");
+            $.ajax({
+                url: "/oneSelf/buyFindUser",
+                data: {"userCode": userCode},
+                dataType: "json",
+                type: "post",
+                success: function (data) {
+                    if (data.num == 1) {
+                        $username.val(data.datas.userName);
+                        $phone.val(data.datas.userPhone);
+                        var userGender = data.datas.userGender;
+                        if (userGender == 1) {
+                            $sex.val("男")
+                        } else {
+                            $sex.val("女")
+                        }
+                        var time = gettime(data.datas.userCreateDate);
+                        $createAt.val(time);
+                        $("#showInfo").show();
+                    } else {
+                        alert(data.message)
+                    }
+                }
+            })
+        })
+        //关闭模拟框
+        $("#close").click(function () {
+            $("#showInfo").hide();
+        })
+
+        //转换时间
+        function gettime(t) {
+            var _time = new Date(t);
+            var year = _time.getFullYear();//2017
+            var month = _time.getMonth() + 1;//7
+            var date = _time.getDate();//10
+            var hour = _time.getHours();//10
+            var minute = _time.getMinutes();//56
+            var second = _time.getSeconds();//15
+            return year + "-" + month + "-" + date + "-";//这里自己按自己需要的格式拼接
+        }
+    })
+</script>
+</html>

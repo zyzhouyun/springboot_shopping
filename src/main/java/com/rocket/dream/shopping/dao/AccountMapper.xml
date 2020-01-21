@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.AccountMapper">
+  <resultMap id="BaseResultMap" type="com.rocket.dream.shopping.pojo.Account">
+    <id column="accountId" jdbcType="INTEGER" property="accountId" />
+    <result column="userCode" jdbcType="INTEGER" property="userCode" />
+    <result column="accMoney" jdbcType="REAL" property="accMoney" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    accountId, userCode, accMoney
+  </sql>
+  <select id="selectByExample" parameterType="com.rocket.dream.shopping.pojo.AccountExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sh_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sh_account
+    where accountId = #{accountId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sh_account
+    where accountId = #{accountId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rocket.dream.shopping.pojo.AccountExample">
+    delete from sh_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rocket.dream.shopping.pojo.Account">
+    insert into sh_account (accountId, userCode, accMoney
+      )
+    values (#{accountId,jdbcType=INTEGER}, #{userCode,jdbcType=INTEGER}, #{accMoney,jdbcType=REAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rocket.dream.shopping.pojo.Account">
+    insert into sh_account
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        accountId,
+      </if>
+      <if test="userCode != null">
+        userCode,
+      </if>
+      <if test="accMoney != null">
+        accMoney,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="accMoney != null">
+        #{accMoney,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rocket.dream.shopping.pojo.AccountExample" resultType="java.lang.Long">
+    select count(*) from sh_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sh_account
+    <set>
+      <if test="record.accountId != null">
+        accountId = #{record.accountId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userCode != null">
+        userCode = #{record.userCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.accMoney != null">
+        accMoney = #{record.accMoney,jdbcType=REAL},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sh_account
+    set accountId = #{record.accountId,jdbcType=INTEGER},
+      userCode = #{record.userCode,jdbcType=INTEGER},
+      accMoney = #{record.accMoney,jdbcType=REAL}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rocket.dream.shopping.pojo.Account">
+    update sh_account
+    <set>
+      <if test="userCode != null">
+        userCode = #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="accMoney != null">
+        accMoney = #{accMoney,jdbcType=REAL},
+      </if>
+    </set>
+    where accountId = #{accountId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rocket.dream.shopping.pojo.Account">
+    update sh_account
+    set userCode = #{userCode,jdbcType=INTEGER},
+      accMoney = #{accMoney,jdbcType=REAL}
+    where accountId = #{accountId,jdbcType=INTEGER}
+  </update>
+</mapper>

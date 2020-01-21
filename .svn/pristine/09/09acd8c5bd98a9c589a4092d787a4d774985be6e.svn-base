@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.rocket.dream.shopping.pojo.User">
+    <id column="userCode" jdbcType="INTEGER" property="userCode" />
+    <result column="accountId" jdbcType="INTEGER" property="accountId" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="userPhone" jdbcType="VARCHAR" property="userPhone" />
+    <result column="userPwd" jdbcType="VARCHAR" property="userPwd" />
+    <result column="userCreateDate" jdbcType="DATE" property="userCreateDate" />
+    <result column="userHeadPortrait" jdbcType="VARCHAR" property="userHeadPortrait" />
+    <result column="userGender" jdbcType="DECIMAL" property="userGender" />
+    <result column="userState" jdbcType="DECIMAL" property="userState" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    userCode, accountId, userName, userPhone, userPwd, userCreateDate, userHeadPortrait, 
+    userGender, userState
+  </sql>
+  <select id="selectByExample" parameterType="com.rocket.dream.shopping.pojo.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sh_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sh_user
+    where userCode = #{userCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sh_user
+    where userCode = #{userCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rocket.dream.shopping.pojo.UserExample">
+    delete from sh_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rocket.dream.shopping.pojo.User">
+    insert into sh_user (userCode, accountId, userName, 
+      userPhone, userPwd, userCreateDate, 
+      userHeadPortrait, userGender, userState
+      )
+    values (#{userCode,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{userPhone,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, #{userCreateDate,jdbcType=DATE}, 
+      #{userHeadPortrait,jdbcType=VARCHAR}, #{userGender,jdbcType=DECIMAL}, #{userState,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rocket.dream.shopping.pojo.User">
+    insert into sh_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userCode != null">
+        userCode,
+      </if>
+      <if test="accountId != null">
+        accountId,
+      </if>
+      <if test="userName != null">
+        userName,
+      </if>
+      <if test="userPhone != null">
+        userPhone,
+      </if>
+      <if test="userPwd != null">
+        userPwd,
+      </if>
+      <if test="userCreateDate != null">
+        userCreateDate,
+      </if>
+      <if test="userHeadPortrait != null">
+        userHeadPortrait,
+      </if>
+      <if test="userGender != null">
+        userGender,
+      </if>
+      <if test="userState != null">
+        userState,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userCode != null">
+        #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreateDate != null">
+        #{userCreateDate,jdbcType=DATE},
+      </if>
+      <if test="userHeadPortrait != null">
+        #{userHeadPortrait,jdbcType=VARCHAR},
+      </if>
+      <if test="userGender != null">
+        #{userGender,jdbcType=DECIMAL},
+      </if>
+      <if test="userState != null">
+        #{userState,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rocket.dream.shopping.pojo.UserExample" resultType="java.lang.Long">
+    select count(*) from sh_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sh_user
+    <set>
+      <if test="record.userCode != null">
+        userCode = #{record.userCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.accountId != null">
+        accountId = #{record.accountId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null">
+        userName = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPhone != null">
+        userPhone = #{record.userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPwd != null">
+        userPwd = #{record.userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userCreateDate != null">
+        userCreateDate = #{record.userCreateDate,jdbcType=DATE},
+      </if>
+      <if test="record.userHeadPortrait != null">
+        userHeadPortrait = #{record.userHeadPortrait,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userGender != null">
+        userGender = #{record.userGender,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userState != null">
+        userState = #{record.userState,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sh_user
+    set userCode = #{record.userCode,jdbcType=INTEGER},
+      accountId = #{record.accountId,jdbcType=INTEGER},
+      userName = #{record.userName,jdbcType=VARCHAR},
+      userPhone = #{record.userPhone,jdbcType=VARCHAR},
+      userPwd = #{record.userPwd,jdbcType=VARCHAR},
+      userCreateDate = #{record.userCreateDate,jdbcType=DATE},
+      userHeadPortrait = #{record.userHeadPortrait,jdbcType=VARCHAR},
+      userGender = #{record.userGender,jdbcType=DECIMAL},
+      userState = #{record.userState,jdbcType=DECIMAL}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rocket.dream.shopping.pojo.User">
+    update sh_user
+    <set>
+      <if test="accountId != null">
+        accountId = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        userName = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        userPhone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        userPwd = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreateDate != null">
+        userCreateDate = #{userCreateDate,jdbcType=DATE},
+      </if>
+      <if test="userHeadPortrait != null">
+        userHeadPortrait = #{userHeadPortrait,jdbcType=VARCHAR},
+      </if>
+      <if test="userGender != null">
+        userGender = #{userGender,jdbcType=DECIMAL},
+      </if>
+      <if test="userState != null">
+        userState = #{userState,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where userCode = #{userCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rocket.dream.shopping.pojo.User">
+    update sh_user
+    set accountId = #{accountId,jdbcType=INTEGER},
+      userName = #{userName,jdbcType=VARCHAR},
+      userPhone = #{userPhone,jdbcType=VARCHAR},
+      userPwd = #{userPwd,jdbcType=VARCHAR},
+      userCreateDate = #{userCreateDate,jdbcType=DATE},
+      userHeadPortrait = #{userHeadPortrait,jdbcType=VARCHAR},
+      userGender = #{userGender,jdbcType=DECIMAL},
+      userState = #{userState,jdbcType=DECIMAL}
+    where userCode = #{userCode,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!--
+    负责人：周云
+    发布物品页面
+    9月24日星期二有改动
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head >
+    <meta charset="UTF-8">
+    <title>发布商品</title>
+    <link rel="icon" href="../img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/userhome.css" />
+    <link rel="stylesheet" href="../css/user.css" />
+   <!-- bootstrap -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- 图片上传即使预览插件 -->
+    <link rel="stylesheet" href="../css/fileinput.min.css">
+    <script  src="../js/fileinput.min.js"></script>
+    <script  src="../js/zh.js"></script>
+
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../layer/2.4/layer.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-resource-min.js"></script>
+    <script src="../js/custom/publish_zy.js"></script>
+
+    <style>
+        .container{padding-top:10px}
+    </style>
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif" class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <div id="home_header">
+            <a href="goods/homeGoods">
+                <h1 class="logo"></h1>
+            </a>
+            <a th:href="@{/index}">
+                <div class="home"></div>
+            </a>`
+        </div>
+        <!--
+
+            描述：左侧个人中心栏
+        -->
+
+        <!--
+
+	            描述：发布物品
+        -->
+        <div id="user_content">
+            <div class="basic">
+                <form action="#" method="post" role="form" enctype="multipart/form-data" id="upform">
+                    <h1 style="margin-left: 210px;">发布物品</h1><hr />
+                    <div class="changeinfo">
+                        <span>物品名：</span><br/>
+                        <input class="in_info" id="billName" type="text" name="" placeholder="请输入物品名" required style="background:rgba(0,0,0,0);" />
+                    </div>
+                    <div class="changeinfo">
+                        <span>出售价格：</span><br/>
+                        <input class="in_info" id="billMoney" type="text" name="billMoney" placeholder="请输入出售价格" required style="background:rgba(0,0,0,0);"/>
+                    </div>
+                    <div class="changeinfo">
+                        <span>物品类别：</span><br/>
+                        <select class="in_info" id="typesel" name="typeId" v-model="bill.billType" style="background:rgba(0,0,0,0);">
+                            <option :value="0">==请选择==</option>
+                            <option v-for="type in typeList" :value="type.typeId" v-text="type.typeName"></option>
+                        </select>
+                    </div>
+                    <div class="changeinfo" id="dir">
+                        <span>商品描述：</span><br/>
+                        <div class="sha">
+                            <div class="publ">
+                                <div class="pub_con">
+                                        <textarea id="billdesc" name="" v-model="bill.billdesc" rows="5" cols="58" style="resize: none;" maxlength="100"></textarea>
+                                    <font>还可输入<strong class="font" style="color: #0bb9f8;">{{jstextArea()}}</strong>字</font>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <hr />
+                    <div class="changeinfo">
+                        <div class="container">
+                            <span>商品图片：</span>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <!--图片框-->
+                                        <div class="imgbox">
+                                            <img src="" id="img" width="400px" height="300px" style="margin-left: 60px;margin-top: 20px;">
+                                        </div>
+
+                                        <div class="col-sm-10">
+                                                <input type="file" name="upfile" id="upfile" onchange="choose(this)"  data-ref="imgUrl" class="col-sm-10 myfile" multiple style="margin-left: 30px;margin-top: 20px;"/>
+                                                <input type="hidden" name="imgUrl" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <input type="button" class="setting-save publish" id="publish" value="发布物品" style="margin-top: 30px;background-color: #89c3eb;margin-left: 300px;"/>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    #menu{
+        display:none;
+        background-color: #fff;
+        width: 100px;
+        height:20px;
+        position: absolute;
+        border: #ccc solid 1px;
+        font-size: 11px;
+    }
+    #menu>ul>li{
+        list-style: none;
+    }
+    #menu>ul>li>a:hover{
+        background: #89c3eb;
+        color: #fff;
+    }
+    #menu ul li a{
+        display: block;
+        height: 20px;
+        padding-left: 15px;
+        padding-top: 5px;
+        line-height: 10px;
+        text-decoration: none;
+        color: #666;
+    }
+</style>
+
+
+<div id="menu">
+    <ul>
+        <li><a th:href="@{/publish/goods}" index="0">我发布的物品</a></li>
+    </ul>
+</div>
+
+
+
+
+</body>
+</html>

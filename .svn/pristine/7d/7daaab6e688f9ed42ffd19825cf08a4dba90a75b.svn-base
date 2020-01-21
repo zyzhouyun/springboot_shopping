@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+
+<generatorConfiguration>
+    <classPathEntry
+            location="E:/Maven_Repository/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar"/>
+    <context id="context" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/schoolshopping?characterEncoding=utf-8" userId="root"
+                        password="1234"/>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <javaModelGenerator targetPackage="com.rocket.dream.shopping.pojo"
+                            targetProject="E:/frame/shopping/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="com.rocket.dream.shopping.dao"
+                         targetProject="E:/frame/shopping/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.rocket.dream.shopping.dao"
+                             targetProject="E:/frame/shopping/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <table tableName="sh_user" domainObjectName="User">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_record" domainObjectName="Record">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_order" domainObjectName="Order">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_comment" domainObjectName="Comment">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_buy" domainObjectName="Buy">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_billtype" domainObjectName="BillType">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_bill" domainObjectName="Bill">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_admin" domainObjectName="Admin">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_address" domainObjectName="Address">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="sh_account" domainObjectName="Account">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="orderandbill" domainObjectName="OrderBill">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+    </context>
+</generatorConfiguration>

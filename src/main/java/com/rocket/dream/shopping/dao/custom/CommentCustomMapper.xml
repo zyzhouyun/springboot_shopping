@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rocket.dream.shopping.dao.custom.CommentCustomMapper">
+
+    <resultMap id="comMap" type="com.rocket.dream.shopping.pojo.custom.CommentCustom">
+        <id column="comId" property="comId"></id>
+        <association property="user" javaType="com.rocket.dream.shopping.pojo.User">
+            <id column="userCode" property="userCode"></id>
+        </association>
+    </resultMap>
+    
+    
+    <select id="selectComtCustomPage" parameterType="com.rocket.dream.shopping.pojo.custom.CommentCustom" resultMap="comMap">
+        SELECT c.*,u.*
+        FROM `sh_comment` c,sh_user u,`sh_bill` b
+        WHERE c.userCode=u.userCode AND c.billCode=b.billCode
+        <if test="billCode!=null">
+            AND c.billCode=#{billCode}
+        </if>
+
+        <if test="comDate!=''">
+            ORDER BY c.comDate DESC, c.comId DESC
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,19 @@
+package com.rocket.dream.shopping.handler;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RequestMapping("/goods")
+@Controller
+public class GoodsHandler {
+
+    @RequestMapping(value = "/publishGoods")
+    public String publishGoods(){
+        return "/goods/pubGoods";
+    }
+
+
+
+
+
+}

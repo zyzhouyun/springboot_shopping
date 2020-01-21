@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.custom.CartCustomMapper">
+
+    
+    <resultMap id="cartMap" type="com.rocket.dream.shopping.pojo.custom.CartCustom">
+        <id column="cartId" property="cartId"></id>
+        <collection property="billCustoms" ofType="com.rocket.dream.shopping.pojo.custom.BillCustom">
+            <id column="billCode" property="billCode"></id>
+            <association property="user" javaType="com.rocket.dream.shopping.pojo.User">
+                <id column="u.userCode" property="userCode"></id>
+            </association>
+            <association property="billType" javaType="com.rocket.dream.shopping.pojo.BillType">
+                <id column="t.typeId" property="typeId"></id>
+            </association>
+        </collection>
+    </resultMap>
+    
+    
+    <select id="selectCartCustom" parameterType="com.rocket.dream.shopping.pojo.custom.CartCustom" resultMap="cartMap">
+SELECT c.cartId as cartId,c.buyerId buyerId,
+        b.billCode billCode,b.userCode userCode,b.typeId typeId,
+        b.billName billName,b.billState billState,b.billdesc billdesc,
+        b.billImage billImage,b.billMoney billMoney,b.putawayDate putawayDate,b.downDate downDate,b.issueDate issueDate,
+u.*,t.*
+FROM `sh_cart` c,`sh_bill` b,`sh_user` u,`sh_billtype` t
+WHERE c.billCode=b.billCode AND b.userCode=u.userCode AND b.typeId=t.typeId
+
+<if test="buyerId!=null">
+    and c.buyerId=#{buyerId}
+</if>
+
+ORDER BY cartId DESC
+
+
+
+    </select>
+
+
+
+</mapper>

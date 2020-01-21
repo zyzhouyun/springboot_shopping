@@ -1,0 +1,53 @@
+package com.rocket.dream.shopping.pojo;
+
+public class Order {
+    private Integer orderId;
+
+    private Integer userCode;
+
+    private Integer orderCode;
+
+    private Float orderMoney;
+
+    private Integer orderStatus;
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public Integer getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Integer userCode) {
+        this.userCode = userCode;
+    }
+
+    public Integer getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(Integer orderCode) {
+        this.orderCode = orderCode;
+    }
+
+    public Float getOrderMoney() {
+        return orderMoney;
+    }
+
+    public void setOrderMoney(Float orderMoney) {
+        this.orderMoney = orderMoney;
+    }
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+}

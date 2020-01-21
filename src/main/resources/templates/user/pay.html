@@ -1,0 +1,191 @@
+<!--
+支付页面
+负责人：周云
+-->
+<!DOCTYPE html>
+        <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+        <meta charset="UTF-8" >
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>确认订单</title>
+        <link rel="icon" href="img/logo.jpg" type="image/x-icon" />
+        <link rel="stylesheet" href="/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/css/userhome.css" />
+        <link rel="stylesheet" href="/css/user.css" />
+        <link rel="icon" href="img/logo.jpg" type="image/x-icon" />
+        <link rel="stylesheet" href="/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/css/userhome.css" />
+        <link rel="stylesheet" href="/css/user.css" />
+        <link rel="icon" href="img/logo.jpg" type="image/x-icon" />
+        <link rel="stylesheet" href="/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/css/userhome.css" />
+        <link rel="stylesheet" href="/css/user.css" />
+        <!-- bootstrap -->
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <script type="text/javascript" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+        <script th:src="@{/layer/2.4/layer.js}"></script>
+        <script src="/js/vue.js"></script>
+        <script src="/js/vue-resource-min.js"></script>
+        </head>
+        <body>
+
+                <!--
+
+                描述：左侧个人中心栏
+                -->
+
+                <!--
+
+                描述：右侧内容区域
+                -->
+                <div id="user_content">
+
+                    <div class="share">
+
+                        <!--
+
+                        描述：关注商品展示
+                        -->
+                        <h1 style="text-align: center">确认订单</h1>
+                        <hr />
+                        <form class="form-horizontal" role="form" action="orders/addOrders" >
+                        <div class="share_content">
+                            <div class="story" th:each="billCustom : ${billCustomList}" th:key="${billCustom.billCode}">
+                                    <!--<h4 th:text="'订单编号：'+${billCustom.billCode}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input name="orderNum" class="order-num" type="text"
+                                               style="border:0px;background:rgba(0, 0, 0, 0);" value=""/> <input name="goodsId" type="hidden"
+                                               th:value="${billCustom.billCode}"/> </h4>-->
+                                    <div class="form-group">
+                                        <label  class="col-sm-2 control-label"></label>
+                                        <div class="col-sm-10">
+                                            <img style="height:150px;weight:150px;" th:src="${#strings.arraySplit(billCustom.billImage,';')[0]}" />
+                                        </div>
+                                        <label  class="col-sm-2 control-label">名称：</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" readonly style="border:0px;background:rgba(0, 0, 0, 0); "
+                                                   th:value="${billCustom.billName}" >
+                                        </div>
+                                        <label  class="col-sm-2 control-label">价格：</label>
+                                        <div class="col-sm-10">
+                                            <input name="orderPrice" type="text" class="form-control price" readonly style="border:0px;background:rgba(0, 0, 0, 0); "
+                                                   th:value="${billCustom.billMoney}">
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-sm-10" style="margin-left: 110px;margin-bottom: 50px;">
+                            收货地址：
+                        <select name="addressInfo" id="addressInfo" v-model="addressId" @change="addressChange()">
+                            <option v-for="address in addressList"  :value="address.addressId">{{address.addressInfo}}</option>
+                        </select>
+                        </div>
+
+
+                        <div class="col-sm-offset-4 col-sm-8" style="margin-bottom: 50px;">
+                            <span style="color: red;">¥</span>
+                            <span id="totalPrice" style="color: red;font-size: 16px;">{{totalPrice}}</span>
+                            <button type="button" @click.once="pay()" v-show="accMoney>=totalPrice" class="btn btn-info">立即支付</button>
+                            <a th:href="@{/oneSelf/showOnePay}" v-show="accMoney<totalPrice" class="btn btn-danger">余额不足！ 请充值</a>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script th:inline="javascript">
+            Vue.http.options.emulateJSON = true
+            var vm=new Vue({
+                el:'#user_content',
+                data:{
+                    addressList:[],
+                    addressId:0,
+                    totalPrice:0,
+                    accMoney:0,
+                    orderCode:'',
+                    blanance:0,
+                    billIds:[[${billIds}]],
+                },
+                methods:{
+                    getAddressList:function () {
+                        this.$http.post('/address/findAddress').then(function (res) {
+                            this.addressList=res.body.datas
+                            if(this.addressList.length!=0){
+                                this.addressId=this.addressList[0].addressId
+                            }else{
+                                $('#addressInfo').prop("disabled",true)
+                            }
+                        })
+                    },
+                    getAccMoney:function () {
+                        //账号金额
+                        var that=this
+                        that.$http.post('/account/accmoney.action').then(function (res) {
+                            that.accMoney=parseFloat(res.body.accMoney.toFixed(1))
+                        })
+                    },
+                    addressChange:function () {
+                        this.$http.post('/address/addressChange',{
+                            "addressId":this.addressId,
+                        }).then(function (res) {
+
+                        })
+                    },
+                    pay:function () {
+                        var that=this
+                        that.orderCode=parseInt(getRamNumber())
+                        that.blanance=that.accMoney-that.totalPrice
+                        $.ajax({
+                            url:'/account/toPay',
+                            data:{
+                                //Account
+                                "accMoney":that.blanance,
+                                //Order
+                                "orderCode":that.orderCode,
+                                "orderMoney":that.totalPrice,
+                                //billIds
+                                "billIds":that.billIds,
+                            },
+                            type:'post',
+                            dataType:'json',
+                            success:function (res) {
+                                if(res==1){
+                                    layer.msg('交易成功',{icon:1})
+                                }else{
+                                    layer.msg('交易失败',{icon:2})
+                                }
+                            },
+                            error:function () {
+                                layer.msg('服务器繁忙')
+                            }
+                        })
+                    },
+                },
+                created:function () {
+                    this.getAccMoney()
+                    var total=0
+                    $.each($('.price'),function (ele,index) {
+                        total+=parseFloat($(this).val())
+                    })
+                    this.totalPrice=parseFloat(total.toFixed(1))
+                    this.getAddressList()
+                }
+            })
+            //生成8位随机数
+            function getRamNumber(){
+                var result=0;
+                for(var i=0;i<16;i++){
+                    result+=parseInt(Math.floor(Math.random()*10000000)+100000);
+                }
+                return result
+            }
+        </script>
+
+        </body>
+        </html>

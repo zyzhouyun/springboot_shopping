@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.BillMapper">
+  <resultMap id="BaseResultMap" type="com.rocket.dream.shopping.pojo.Bill">
+    <id column="billCode" jdbcType="INTEGER" property="billCode" />
+    <result column="userCode" jdbcType="INTEGER" property="userCode" />
+    <result column="typeId" jdbcType="INTEGER" property="typeId" />
+    <result column="billName" jdbcType="VARCHAR" property="billName" />
+    <result column="billState" jdbcType="DECIMAL" property="billState" />
+    <result column="billdesc" jdbcType="VARCHAR" property="billdesc" />
+    <result column="billImage" jdbcType="VARCHAR" property="billImage" />
+    <result column="billMoney" jdbcType="REAL" property="billMoney" />
+    <result column="putawayDate" jdbcType="DATE" property="putawayDate" />
+    <result column="downDate" jdbcType="DATE" property="downDate" />
+    <result column="issueDate" jdbcType="DATE" property="issueDate" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    billCode, userCode, typeId, billName, billState, billdesc, billImage, billMoney, 
+    putawayDate, downDate, issueDate
+  </sql>
+  <select id="selectByExample" parameterType="com.rocket.dream.shopping.pojo.BillExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sh_bill
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sh_bill
+    where billCode = #{billCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sh_bill
+    where billCode = #{billCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rocket.dream.shopping.pojo.BillExample">
+    delete from sh_bill
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rocket.dream.shopping.pojo.Bill">
+    insert into sh_bill (billCode, userCode, typeId, 
+      billName, billState, billdesc, 
+      billImage, billMoney, putawayDate, 
+      downDate, issueDate)
+    values (#{billCode,jdbcType=INTEGER}, #{userCode,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, 
+      #{billName,jdbcType=VARCHAR}, #{billState,jdbcType=DECIMAL}, #{billdesc,jdbcType=VARCHAR}, 
+      #{billImage,jdbcType=VARCHAR}, #{billMoney,jdbcType=REAL}, #{putawayDate,jdbcType=DATE}, 
+      #{downDate,jdbcType=DATE}, #{issueDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rocket.dream.shopping.pojo.Bill">
+    insert into sh_bill
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="billCode != null">
+        billCode,
+      </if>
+      <if test="userCode != null">
+        userCode,
+      </if>
+      <if test="typeId != null">
+        typeId,
+      </if>
+      <if test="billName != null">
+        billName,
+      </if>
+      <if test="billState != null">
+        billState,
+      </if>
+      <if test="billdesc != null">
+        billdesc,
+      </if>
+      <if test="billImage != null">
+        billImage,
+      </if>
+      <if test="billMoney != null">
+        billMoney,
+      </if>
+      <if test="putawayDate != null">
+        putawayDate,
+      </if>
+      <if test="downDate != null">
+        downDate,
+      </if>
+      <if test="issueDate != null">
+        issueDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="billCode != null">
+        #{billCode,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="billName != null">
+        #{billName,jdbcType=VARCHAR},
+      </if>
+      <if test="billState != null">
+        #{billState,jdbcType=DECIMAL},
+      </if>
+      <if test="billdesc != null">
+        #{billdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="billImage != null">
+        #{billImage,jdbcType=VARCHAR},
+      </if>
+      <if test="billMoney != null">
+        #{billMoney,jdbcType=REAL},
+      </if>
+      <if test="putawayDate != null">
+        #{putawayDate,jdbcType=DATE},
+      </if>
+      <if test="downDate != null">
+        #{downDate,jdbcType=DATE},
+      </if>
+      <if test="issueDate != null">
+        #{issueDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rocket.dream.shopping.pojo.BillExample" resultType="java.lang.Long">
+    select count(*) from sh_bill
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sh_bill
+    <set>
+      <if test="record.billCode != null">
+        billCode = #{record.billCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.userCode != null">
+        userCode = #{record.userCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.typeId != null">
+        typeId = #{record.typeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.billName != null">
+        billName = #{record.billName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billState != null">
+        billState = #{record.billState,jdbcType=DECIMAL},
+      </if>
+      <if test="record.billdesc != null">
+        billdesc = #{record.billdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billImage != null">
+        billImage = #{record.billImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billMoney != null">
+        billMoney = #{record.billMoney,jdbcType=REAL},
+      </if>
+      <if test="record.putawayDate != null">
+        putawayDate = #{record.putawayDate,jdbcType=DATE},
+      </if>
+      <if test="record.downDate != null">
+        downDate = #{record.downDate,jdbcType=DATE},
+      </if>
+      <if test="record.issueDate != null">
+        issueDate = #{record.issueDate,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sh_bill
+    set billCode = #{record.billCode,jdbcType=INTEGER},
+      userCode = #{record.userCode,jdbcType=INTEGER},
+      typeId = #{record.typeId,jdbcType=INTEGER},
+      billName = #{record.billName,jdbcType=VARCHAR},
+      billState = #{record.billState,jdbcType=DECIMAL},
+      billdesc = #{record.billdesc,jdbcType=VARCHAR},
+      billImage = #{record.billImage,jdbcType=VARCHAR},
+      billMoney = #{record.billMoney,jdbcType=REAL},
+      putawayDate = #{record.putawayDate,jdbcType=DATE},
+      downDate = #{record.downDate,jdbcType=DATE},
+      issueDate = #{record.issueDate,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rocket.dream.shopping.pojo.Bill">
+    update sh_bill
+    <set>
+      <if test="userCode != null">
+        userCode = #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        typeId = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="billName != null">
+        billName = #{billName,jdbcType=VARCHAR},
+      </if>
+      <if test="billState != null">
+        billState = #{billState,jdbcType=DECIMAL},
+      </if>
+      <if test="billdesc != null">
+        billdesc = #{billdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="billImage != null">
+        billImage = #{billImage,jdbcType=VARCHAR},
+      </if>
+      <if test="billMoney != null">
+        billMoney = #{billMoney,jdbcType=REAL},
+      </if>
+      <if test="putawayDate != null">
+        putawayDate = #{putawayDate,jdbcType=DATE},
+      </if>
+      <if test="downDate != null">
+        downDate = #{downDate,jdbcType=DATE},
+      </if>
+      <if test="issueDate != null">
+        issueDate = #{issueDate,jdbcType=DATE},
+      </if>
+    </set>
+    where billCode = #{billCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rocket.dream.shopping.pojo.Bill">
+    update sh_bill
+    set userCode = #{userCode,jdbcType=INTEGER},
+      typeId = #{typeId,jdbcType=INTEGER},
+      billName = #{billName,jdbcType=VARCHAR},
+      billState = #{billState,jdbcType=DECIMAL},
+      billdesc = #{billdesc,jdbcType=VARCHAR},
+      billImage = #{billImage,jdbcType=VARCHAR},
+      billMoney = #{billMoney,jdbcType=REAL},
+      putawayDate = #{putawayDate,jdbcType=DATE},
+      downDate = #{downDate,jdbcType=DATE},
+      issueDate = #{issueDate,jdbcType=DATE}
+    where billCode = #{billCode,jdbcType=INTEGER}
+  </update>
+</mapper>

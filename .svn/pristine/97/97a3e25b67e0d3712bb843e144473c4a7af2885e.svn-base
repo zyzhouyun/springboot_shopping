@@ -1,0 +1,17 @@
+package com.rocket.dream.shopping.handler;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class text {
+    @RequestMapping("/index")
+    public String basic() {
+        return "/user/basic";
+    }
+
+    @RequestMapping("/order")
+    public String order() {
+        return "/user/orders";
+    }
+}

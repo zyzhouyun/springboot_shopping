@@ -1,0 +1,12 @@
+package com.rocket.dream.shopping.service;
+
+import com.rocket.dream.shopping.pojo.Bill;
+
+/**
+ * 发布商品
+ */
+public interface IPublishService {
+
+    public int publishGoods(Bill bill);
+
+}

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>订单中心</title>
+    <link rel="icon" href="../img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="../css/userhome.css"/>
+    <link rel="stylesheet" href="../css/user.css"/>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+    <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif" class="jcrop-previewjcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <div id="home_header">
+            <a href="">
+                <h1 class="logo"></h1>
+            </a>
+            <a href="">
+                <img src="../img/home_header.png" style="margin-left: 20px;">
+            </a>
+            <a href="">
+                <div class="home"></div>
+            </a>
+        </div>
+        <!--
+
+        描述：左侧个人中心栏
+        -->
+        <div id="user_nav">
+            <div class="user_info">
+                <div class="head_img">
+                    <img th:src="${session.loginUser.userHeadPortrait}"></div>
+                <div class="big_headimg">
+                    <img src="">
+                </div>
+                <span class="name" th:text="${session.loginUser.userName}"></span>
+                <hr>
+                <a class="btn" style="width: 98%;background-color: rgb(79, 190, 246);color:rgba(255, 255, 255, 1);"
+                   href="">我的钱包：￥</a>
+                <input type="hidden" value="" id="recharge"/>
+                <input type="hidden" value="" id="withdrawals"/>
+                <span class="btn" data-toggle="modal" data-target="#myModal" style="width: 98%;background-color: rgb(79, 190,
+        246); color:rgba(255, 255, 255, 1);margin-top:0.5cm;">我的信用积分：}</span>
+
+            </div>
+            <div class="home_nav">
+                <ul>
+                    <a th:href="@{/oneSelf/showOneOrder}">
+                        <li class="notice">
+                            <div></div>
+                            <span>订单中心</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showAddress}">
+                        <li class="fri">
+                            <div></div>
+                            <span>收货地址</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOnePay}">
+                        <li class="store">
+                            <div></div>
+                            <span>充值中心</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOneSelf}" }>
+                        <li class="second">
+                            <div></div>
+                            <span>求购信息</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOneSelf}">
+                        <li class="set">
+                            <div></div>
+                            <span>个人设置</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+        <!--
+
+        描述：右侧内容区域
+        -->
+        <div id="user_content">
+
+            <div class="share">
+
+                <!--
+
+                描述：订单展示
+                -->
+                <h1 style="text-align: center">订单中心</h1>
+                <hr/>
+                <div class="share_content">
+                    <div class="story">
+                        <div id="showInfo" class="container">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist" style="width: 46%">
+                                <li class="nav-item"><a class="nav-link active" data-toggle="tab"
+                                                        href="#orders_my">我买的</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                        href="#orders_other">我卖的</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content" style="width: 46%">
+
+                                <!-- 买家订单中心 -->
+                                <div id="shopping" class="container tab-pane active"
+                                     style="width: 700px">
+                                    <br>
+
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr style="background-color: #0bb9f8">
+                                                <th>订单编号</th>
+                                                <th>价格</th>
+                                                <th>下单时间</th>
+                                                <th>状态</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="order:${orderInfo}">
+                                                <td class="oid" th:text="${order.orderId}" style="display: none;"></td>
+                                                <td th:text="${order.orderCode}"></td>
+                                                <td th:text="${order.orderMoney}"></td>
+                                                <td th:text="${#dates.format(order.ordertime,'yyyy-MM-dd')}"></td>
+
+                                                <td th:if="${order.orderStatus==1}">已完成</td>
+                                                <td th:if="${order.orderStatus==0}">未完成</td>
+                                                <td>
+                                                    <button class="orderInfo">订单详情</button>
+                                                    <button>取消订单</button>
+                                                    <button>删除</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- 卖家订单中心 -->
+                                <div id="orders_other" class="container tab-pane fade"
+                                     style="width: 700px">
+                                    <br>
+                                    <form class="form-horizontal" role="form">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <th>商品编号</th>
+                                                    <th>商品名称</th>
+                                                    <th>商品价格</th>
+                                                    <th>商品状态</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <button>删除</button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--                               模拟框-->
+                <div id="moni"
+                     style="background-color: transparent;height: 700px;width: 1000px;z-index: 10px; position:fixed;top: 300px;display: none;">
+                    <div style="background-color: white; height: 300px; width: 700px;">
+                        <table class="table">
+                            <thead>
+                            <tr style="background-color: #0bb9f8">
+                                <th>订单编号</th>
+                                <th>商品信息</th>
+                                <th>商品价格</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <button>退货</button>
+                                    <button>删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="guanbi">关闭</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script>
+    $(function () {
+        //模拟框显示
+        $(".orderInfo").click(function () {
+            var orderId = $(this).parents("tr").children(".oid").text();
+            $.ajax({})
+            $("#moni").show();
+            $("#showInfo").hide();
+        })
+        $("#guanbi").click(function () {
+            $("#moni").hide();
+            $("#showInfo").show();
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>我的购物车</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script src="../layer/2.4/layer.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-resource-min.js"></script>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <div class="row">
+            <!--网格类-->
+            <div class="col-md-12">
+                <h1 class="page-header" style="color: #89c3eb;">购物车</h1>
+            </div>
+
+            <div class="col-md-12" th:if="${#lists.isEmpty(billCustoms)}">
+                <h1>空空如也</h1>
+            </div>
+
+            <div class="col-md-6" th:each="billCustom : ${billCustoms}">
+                <a href="javascript:void(0)" th:billCode="${billCustom.billCode}" onclick="del(this)" title="删除" style="text-decoration: none;display: block;margin-top: 30px;position: absolute;top: -30px;left: 3px;"><strong>X</strong></a>
+                <div class="col-md-1">
+                    <input type="checkbox" name="choose" th:value="${billCustom.billCode}" v-model.number="choose" @change="jsPrice" style="margin-top: 100px;">
+                </div>
+                <div class="col-md-5">
+                    <img th:src="${#strings.arraySplit(billCustom.billImage,';')[0]}"
+                         style="width: 160px;height: 180px;display: inline-block;margin-top: 10px;margin-bottom: 10px;margin-right: 15px;">
+                </div>
+                <div class="col-md-5">
+                    <h3 class="billname" style="margin-top: 60px;">
+                        <!--<span style="font-size: 18px;opacity: 0.5;">商品名：</span>-->
+                        <span  th:text="${billCustom.billName}"  style="color: #698aab;"></span>
+                    </h3>
+                    <h3 class="price" >
+                        <!--<span style="font-size: 18px;opacity: 0.5;">金额：</span>-->
+                        <span style="color: #698aab;"> ¥</span>
+                        <span th:text="${billCustom.billMoney}" style="color: #698aab;"></span>
+                    </h3>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="float: right;margin-top: 20px;margin-bottom: 20px;" th:if="${ ! #lists.isEmpty(billCustoms)}">
+            <input type="checkbox" name="chooseAll" class="chooseAll" @change="chooseAll()" >&nbsp;&nbsp;全选&nbsp;&nbsp;&nbsp;
+            <span></span>
+            <!--金额保留两位小数-->
+            <span style="display: inline-block;width: 130px;">合计：¥{{totalPrice | price}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="goto" @click.prevent="toPay">去结算(<span ref="num">{{choose.length}}</span>)</button>
+        </div>
+
+    </div>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .col-md-6{
+            border: 1px solid #bbc8e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .col-md-6:hover{
+            background-color: #fafafa;
+            transition: background-color 1s;
+        }
+        .goto{
+            display: inline-block;
+            width: 90px;
+            height: 36px;
+            background-color: #00b0ff;
+            color: #fff;
+            text-align: center;
+            line-height: 36px;
+            border: none;
+            border-radius: 30px;
+        }
+        .goto:hover{
+            background-color: #bf242a;
+        }
+    </style>
+
+    <script type="text/javascript" th:inline="javascript">
+        Vue.http.options.emulateJSON = true
+        Vue.filter('price',function (data) {
+            return data.toFixed(1)
+        })
+        var vm=new Vue({
+            el:'#app',
+            data:{
+                billList:[[${billCustoms}]],
+                choose:[],
+                totalPrice:0,
+                payBillList:[],
+            },
+            methods:{
+                chooseAll:function () {
+                    var that=this
+                    if(event.currentTarget.checked){
+                        //全选被选中
+                        that.choose=[]
+                        that.billList.forEach(function (item,index) {
+                            that.choose.push(item.billCode)
+                        })
+                        that.jsPrice()
+                    }else{
+                        that.choose=[]
+                        that.totalPrice=0
+                    }
+                },
+                jsPrice:function () {
+                    var that=this
+                    var price=0
+                    that.billList.forEach(function (item,index) {
+                        if(that.choose.indexOf(item.billCode)!=-1){
+                            price+=item.billMoney
+                        }
+                    })
+                    that.totalPrice=price
+                },
+                toPay:function () {
+                    if(this.choose.length==0){
+                        layer.msg('请选择结算商品')
+                        return false
+                    }else{
+                        //进行结算
+                        location.href='/billc/toPay/'+vm.choose
+                    }
+                }
+            }
+        })
+
+        function del(obj) {
+            layer.confirm('确认删除吗？',{title:'温馨の提示'},function () {
+                var $billCode=$(obj).attr('billCode')
+                $.ajax({
+                    url:'/billc/delCartItem/'+$billCode,
+                    async:true,
+                    type:'post',
+                    dataType:'json',
+                    success:function (res) {
+                        if(res==1){
+                            layer.msg('删除成功',{icon:1})
+                            $(obj).parents(".col-md-6").remove()
+                            vm.choose.forEach(function (item,index) {
+                                if(item==$billCode){
+                                    vm.choose.splice(index,1)
+                                }
+                            })
+                            vm.billList.forEach(function (item,index) {
+                                if(item.billCode==$billCode){
+                                    vm.billList.splice(index,1)
+                                }
+                            })
+                            vm.jsPrice()
+                        }else{
+                            layer.msg('删除失败',{icon:2})
+                        }
+                    },
+                    error:function () {
+                        layer.msg('服务器繁忙')
+                    }
+                })
+            })
+            }
+    </script>
+
+</body>
+</html>

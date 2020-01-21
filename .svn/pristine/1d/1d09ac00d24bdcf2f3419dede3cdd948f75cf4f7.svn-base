@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.BuyMapper">
+  <resultMap id="BaseResultMap" type="com.rocket.dream.shopping.pojo.Buy">
+    <id column="buyId" jdbcType="INTEGER" property="buyId" />
+    <result column="userCode" jdbcType="INTEGER" property="userCode" />
+    <result column="buyInfo" jdbcType="VARCHAR" property="buyInfo" />
+    <result column="buyDate" jdbcType="DATE" property="buyDate" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    buyId, userCode, buyInfo, buyDate
+  </sql>
+  <select id="selectByExample" parameterType="com.rocket.dream.shopping.pojo.BuyExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sh_buy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sh_buy
+    where buyId = #{buyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sh_buy
+    where buyId = #{buyId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rocket.dream.shopping.pojo.BuyExample">
+    delete from sh_buy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rocket.dream.shopping.pojo.Buy">
+    insert into sh_buy (buyId, userCode, buyInfo, 
+      buyDate)
+    values (#{buyId,jdbcType=INTEGER}, #{userCode,jdbcType=INTEGER}, #{buyInfo,jdbcType=VARCHAR}, 
+      #{buyDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rocket.dream.shopping.pojo.Buy">
+    insert into sh_buy
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="buyId != null">
+        buyId,
+      </if>
+      <if test="userCode != null">
+        userCode,
+      </if>
+      <if test="buyInfo != null">
+        buyInfo,
+      </if>
+      <if test="buyDate != null">
+        buyDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="buyId != null">
+        #{buyId,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="buyInfo != null">
+        #{buyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="buyDate != null">
+        #{buyDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rocket.dream.shopping.pojo.BuyExample" resultType="java.lang.Long">
+    select count(*) from sh_buy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sh_buy
+    <set>
+      <if test="record.buyId != null">
+        buyId = #{record.buyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userCode != null">
+        userCode = #{record.userCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyInfo != null">
+        buyInfo = #{record.buyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buyDate != null">
+        buyDate = #{record.buyDate,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sh_buy
+    set buyId = #{record.buyId,jdbcType=INTEGER},
+      userCode = #{record.userCode,jdbcType=INTEGER},
+      buyInfo = #{record.buyInfo,jdbcType=VARCHAR},
+      buyDate = #{record.buyDate,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rocket.dream.shopping.pojo.Buy">
+    update sh_buy
+    <set>
+      <if test="userCode != null">
+        userCode = #{userCode,jdbcType=INTEGER},
+      </if>
+      <if test="buyInfo != null">
+        buyInfo = #{buyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="buyDate != null">
+        buyDate = #{buyDate,jdbcType=DATE},
+      </if>
+    </set>
+    where buyId = #{buyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rocket.dream.shopping.pojo.Buy">
+    update sh_buy
+    set userCode = #{userCode,jdbcType=INTEGER},
+      buyInfo = #{buyInfo,jdbcType=VARCHAR},
+      buyDate = #{buyDate,jdbcType=DATE}
+    where buyId = #{buyId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.custom.BillCustomMapper">
+    
+    <select id="findBillsbyUserCode" parameterType="int" resultType="com.rocket.dream.shopping.pojo.Bill">
+       SELECT * FROM `sh_bill` WHERE `userCode` =#{userCode}
+    </select>
+
+
+
+    
+    <resultMap id="billCustomByBillCodeMap" type="com.rocket.dream.shopping.pojo.custom.BillCustom">
+        <id column="billCode" property="billCode"></id>
+        <association property="user" javaType="com.rocket.dream.shopping.pojo.User">
+            <id column="u.userCode" property="user.userCode"></id>
+        </association>
+        <association property="billType" javaType="com.rocket.dream.shopping.pojo.BillType">
+            <id column="t.typeId" property="billType.typeId"></id>
+        </association>
+    </resultMap>
+
+    <select id="selectBillCustomByBillCode" parameterType="com.rocket.dream.shopping.pojo.custom.BillCustom" resultMap="billCustomByBillCodeMap">
+      SELECT b.billCode billCode,b.userCode userCode,b.typeId typeId,
+        b.billName billName,b.billState billState,b.billdesc billdesc,
+        b.billImage billImage,b.billMoney billMoney,b.putawayDate putawayDate,b.downDate downDate,b.issueDate issueDate,
+        u.*,t.*
+      FROM sh_bill b,sh_user u,sh_billtype t
+      WHERE b.userCode = u.userCode AND b.typeId = t.typeId
+
+      <if test="billCode!=null">
+          and b.billCode=#{billCode}
+      </if>
+    </select>
+
+
+    <!--商家加钱-->
+    <update id="addMoneyMerchant">
+        UPDATE sh_account SET accMoney = accMoney + #{billMoney}
+        WHERE userCode=#{userCode}
+    </update>
+
+
+
+</mapper>

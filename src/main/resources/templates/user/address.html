@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>订单中心</title>
+    <link rel="icon" href="../img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="../css/userhome.css"/>
+    <link rel="stylesheet" href="../css/user.css"/>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+    <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif" class="jcrop-previewjcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <div id="home_header">
+            <a href="">
+                <h1 class="logo"></h1>
+            </a>
+            <a href="">
+                <img src="../img/home_header.png" style="margin-left: 20px;">
+            </a>
+            <a href="">
+                <div class="home"></div>
+            </a>
+        </div>
+        <!--
+
+        描述：左侧个人中心栏
+        -->
+        <div id="user_nav">
+            <div class="user_info">
+                <div class="head_img">
+     <img th:src="${session.loginUser.userHeadPortrait}"></div>
+                <div class="big_headimg">
+                    <img src="">
+                </div>
+                <span class="name" th:text="${session.loginUser.userName}"></span>
+                <hr>
+                <a class="btn" style="width: 98%;background-color: rgb(79, 190, 246);color:rgba(255, 255, 255, 1);"
+                   href="">我的钱包：￥</a>
+                <input type="hidden" value="" id="recharge"/>
+                <input type="hidden" value="" id="withdrawals"/>
+                <span class="btn" data-toggle="modal" data-target="#myModal" style="width: 98%;background-color: rgb(79, 190,
+        246); color:rgba(255, 255, 255, 1);margin-top:0.5cm;">我的信用积分：}</span>
+            </div>
+            <div class="home_nav">
+                <ul>
+                    <a th:href="@{/oneSelf/showOneOrder}">
+                        <li class="notice">
+                            <div></div>
+                            <span>订单中心</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a href="">
+                        <li class="fri">
+                            <div></div>
+                            <span>收货地址</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOnePay}">
+                        <li class="store">
+                            <div></div>
+                            <span>充值中心</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOneSelf}" }>
+                        <li class="second">
+                            <div></div>
+                            <span>求购信息</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                    <a th:href="@{/oneSelf/showOneSelf}">
+                        <li class="set">
+                            <div></div>
+                            <span>个人设置</span>
+                            <strong></strong>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+        <!--
+
+        描述：右侧内容区域
+        -->
+        <div id="user_content">
+
+            <div class="share">
+
+                <!--
+                描述：我的地址
+                -->
+                <h1 style="text-align: center">我的地址</h1>
+                <hr/>
+                <div class="share_content">
+                    <div class="story">
+
+                        <div class="container">
+                            <!-- Tab panes -->
+                            <div class="tab-content" style="width: 46%">
+
+                                <div id="orders_my" class="container tab-pane active"
+                                     style="width: 700px">
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align:center">
+                                            <thead>
+                                            <tr>
+                                            </tr>
+                                            <tr style="background-color: #0bb9f8">
+                                                <th>收货人</th>
+                                                <th>收货地址</th>
+                                                <th>联系方式</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="address:${addresses}"
+                                                th:style=" 'background:'+${(addressStat.index % 2 != 0 ? '#c4d4ca;': '')}+''">
+                                                <td class="aid" th:text="${address.addressId}"
+                                                    style="display: none"></td>
+                                                <td th:text="${address.addressName}">${address.addressName}</td>
+                                                <td th:text="${address.addressInfo}"></td>
+                                                <td th:text="${address.addressPhone}"></td>
+                                                <td>
+                                                    <button class="doDelete">删除</button>
+                                                    <button class="showUpdate">修改</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <button class="showAdd">添加新的地址</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--模拟框 -->
+<div style=" position: relative;bottom: 500px;left: 100px;background-color: transparent; z-index: 6px; height: 500px;display: none"
+     id="showInfo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title middle" id="myModalLabel">添加新的地址</h4>
+            </div>
+            <div class="modal-body" style="height: 220px;">
+                <form id="myviewform">
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <label>收货人姓名:</label>
+                            <input type="text" class="form-control" id="addressName"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-sm-10">
+                            <label>收货地址:</label>
+                            <input type="text" class="form-control" id="addressInfo"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-sm-10">
+                            <label>联系电话:</label>
+                            <input type="text" class="form-control" id="addressPhone"/>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div style="text-align: center">
+                <button class="insert">添加</button>
+                <button class="update">修改</button>
+            </div>
+            <div class="modal-footer">
+                <button id="close" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script>
+    $(function () {
+        var aid=0;
+        //显示添加新的地址
+        $(".showAdd").click(function () {
+            $("#showInfo").show();
+            $(".update").hide();
+        })
+        //显示修改页面
+        $(".showUpdate").click(function () {
+            var addressId = $(this).parents("tr").children(".aid").text();
+            aid=addressId;
+            $.ajax({
+                url: "/oneSelf/findUpdate",
+                data: {"addressId": addressId},
+                dataType: "json",
+                type: "post",
+                async: false,
+                success: function (data) {
+                    if (data.num == 1) {
+                        $("#addressName").val(data.datas.addressName);
+                        $("#addressInfo").val(data.datas.addressInfo);
+                        $("#addressPhone").val(data.datas.addressPhone);
+                    }
+                }
+            })
+            $("#showInfo").show();
+            $(".insert").hide();
+        })
+        // 模拟框关闭
+        $("#close").click(function () {
+            $("#addressName").val("");
+            $("#addressInfo").val("");
+            $("#addressPhone").val("");
+            $("#showInfo").hide();
+        })
+        //添加新的收货地址
+        $(".insert").click(function () {
+            var addressName = $("#addressName").val();
+            var addressInfo = $("#addressInfo").val();
+            var addressPhone = $("#addressPhone").val();
+            var reg = /^1(3|4|5|6|7|8|9)\d{9}$/
+            if (addressName == null || addressName == "") {
+                alert("收货人不为空");
+                return false;
+            } else if (addressInfo == null || addressInfo == "") {
+                alert("收货地址不为空");
+                return false;
+            } else if (addressPhone == "" || addressPhone == null) {
+                alert("联系电话不能为空");
+                return false;
+            } else if (addressPhone.length != 11) {
+                alert("联系电话格式不对");
+                return false;
+            } else if (!reg.test(addressPhone)) {
+                alert("联系电话格式不对");
+                return false;
+            } else {
+                $.ajax({
+                    url: "/oneSelf/insertAddress",
+                    data: {"addressName": addressName, "addressPhone": addressPhone, "addressInfo": addressInfo},
+                    type: "post",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.num == 1) {
+                            window.location.href = "/oneSelf/showAddress";
+                        } else {
+                            alert("添加失败");
+                        }
+                    }
+                })
+            }
+
+        })
+        //修改收货地址
+        $(".update").click(function () {
+            var addressName = $("#addressName").val();
+            var addressInfo = $("#addressInfo").val();
+            var addressPhone = $("#addressPhone").val();
+            var reg = /^1(3|4|5|6|7|8|9)\d{9}$/
+            if (addressName == null || addressName == "") {
+                alert("收货人不为空");
+                return false;
+            } else if (addressInfo == null || addressInfo == "") {
+                alert("收货地址不为空");
+                return false;
+            } else if (addressPhone == "" || addressPhone == null) {
+                alert("联系电话不能为空");
+                return false;
+            } else if (addressPhone.length != 11) {
+                alert("联系电话格式不对");
+                return false;
+            } else if (!reg.test(addressPhone)) {
+                alert("联系电话格式不对");
+                return false;
+            } else {
+                $.ajax({
+                    url: "/oneSelf/updateAddress",
+                    data: {"addressName": addressName, "addressPhone": addressPhone, "addressInfo": addressInfo,"addressId":aid},
+                    type: "post",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.num == 1) {
+                            window.location.href = "/oneSelf/showAddress";
+                        } else {
+                            alert("修改失败");
+                        }
+                    }
+                })
+            }
+        })
+        //删除收货地址
+        $(".doDelete").click(function () {
+            var bool = confirm("确认要删除嘛？");
+            if(bool){
+                var addressId = $(this).parents("tr").children(".aid").text();
+                var parents = $(this).parents("tr");
+                $.ajax({
+                    url:"/oneSelf/deleteAddress",
+                    data:{"addressId":addressId},
+                    dataType:"json",
+                    type:"post",
+                    success:function (data) {
+                        if(data.num==1){
+                            alert("删除成功");
+                            parents.remove();
+                        }else {
+                            alert("删除失败");
+                        }
+                    }
+                })
+            }
+
+        })
+
+    })
+</script>
+a
+</html>

@@ -1,0 +1,46 @@
+/**
+ * zhouyun
+ * 发布商品
+ */
+
+$(function () {
+
+    $('#publish').click(function () {
+        var formData=new FormData($("#upform")[0])
+
+        $.ajax({
+            url:"/publish/publishGoods",
+            data:formData,
+            type:'post',
+            dataType:'json',
+            async:true,
+            cache:false,
+            processData:false,
+            contentType:false,
+            success:function (result) {
+                console.log(result.datas);
+                if(result.num==1){
+                    $.cookie('imgpath' , result.datas[0].toString())
+
+                }
+                layer.msg(result.message,{icon:1})
+
+            }
+        })
+    })
+
+
+})
+
+
+
+
+function choose(file) {
+    if (file.files && file.files[0]) {
+        var reader = new FileReader()
+        reader.onload = function (e) {
+            $('#img').attr({"src": e.target.result})
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+}

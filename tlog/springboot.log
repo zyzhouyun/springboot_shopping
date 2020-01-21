@@ -1,0 +1,21 @@
+2019-10-07 09:27:30.262  INFO 4912 --- [restartedMain] c.r.dream.shopping.ShoppingApplication   : Starting ShoppingApplication on DESKTOP-QNVVKMQ with PID 4912 (D:\Download\shopping\target\classes started by hr in D:\Download\shopping)
+2019-10-07 09:27:30.280  INFO 4912 --- [restartedMain] c.r.dream.shopping.ShoppingApplication   : No active profile set, falling back to default profiles: default
+2019-10-07 09:27:30.346  INFO 4912 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2019-10-07 09:27:30.346  INFO 4912 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2019-10-07 09:27:32.967  INFO 4912 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-10-07 09:27:32.995  INFO 4912 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-10-07 09:27:32.995  INFO 4912 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.22]
+2019-10-07 09:27:33.099  INFO 4912 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-10-07 09:27:33.101  INFO 4912 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2754 ms
+2019-10-07 09:27:34.214  INFO 4912 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-10-07 09:27:34.291  INFO 4912 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2019-10-07 09:27:34.640  INFO 4912 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2019-10-07 09:27:34.741  INFO 4912 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2019-10-07 09:27:34.745  INFO 4912 --- [restartedMain] c.r.dream.shopping.ShoppingApplication   : Started ShoppingApplication in 4.956 seconds (JVM running for 7.817)
+2019-10-07 09:29:11.384  INFO 4912 --- [http-nio-8080-exec-1] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [1569633257,1569811460,1569813291] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2019-10-07 09:29:11.435  INFO 4912 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-10-07 09:29:11.439  INFO 4912 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2019-10-07 09:29:11.483  INFO 4912 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 42 ms
+2019-10-07 09:29:12.777  INFO 4912 --- [http-nio-8080-exec-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2019-10-07 09:29:13.436  INFO 4912 --- [http-nio-8080-exec-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.

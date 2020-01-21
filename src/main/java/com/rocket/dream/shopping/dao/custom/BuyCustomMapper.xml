@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocket.dream.shopping.dao.custom.BuyCustomMapper">
+    <resultMap id="findInfo" type="com.rocket.dream.shopping.pojo.custom.BuyCustom">
+        <id property="buyId" column="buyId"/>
+      <association property="user" javaType="com.rocket.dream.shopping.pojo.User">
+          <id property="userCode" column="userCode"/>
+          <result property="userName" column="userName"/>
+          <result property="userHeadPortrait" column="userPortrait"/>
+      </association>
+    </resultMap>
+    <select id="findBuyInfo" resultMap="findInfo">
+        SELECT u.`userCode`as userCode,u.`userName` as userName,u.`userHeadPortrait` as userPortrait,
+        b.* FROM sh_buy b,sh_user u WHERE b.`userCode`=u.`userCode` order by  b.`buyDate`  DESC
+    </select>
+</mapper>
+   
